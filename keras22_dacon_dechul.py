@@ -28,7 +28,8 @@ test_le=LabelEncoder()
 
 
 
-
+train_csv['대출기간']=train_le.fit_transform(train_csv['대출기간'])
+test_csv['대출기간']=test_le.fit_transform(test_csv['대출기간'])
 train_csv['근로기간']=train_le.fit_transform(train_csv['근로기간'])
 train_csv['주택소유상태']=train_le.fit_transform(train_csv['주택소유상태'])
 train_csv['대출목적']=train_le.fit_transform(train_csv['대출목적'])
@@ -39,8 +40,8 @@ test_csv['주택소유상태']=test_le.fit_transform(test_csv['주택소유상�
 test_csv['대출목적']=test_le.fit_transform(test_csv['대출목적'])
 
 
-train_csv['대출기간'] = train_csv['대출기간'].str.split().str[0].astype(int)
-test_csv['대출기간'] = test_csv['대출기간'].str.split().str[0].astype(int)
+# train_csv['대출기간'] = train_csv['대출기간'].str.split().str[0].astype(int)
+# test_csv['대출기간'] = test_csv['대출기간'].str.split().str[0].astype(int)
 # train_csv['대출기간']=train_le.fit_transform(train_csv['대출기간'])
 # test_csv['대출기간']=test_le.fit_transform(test_csv['대출기간'])
 
@@ -69,7 +70,7 @@ yo = to_categorical(y)
 print(x.shape,yo.shape) #(96294, 13) (96294, 7)
 
 x_train,x_test,y_train,y_test=train_test_split(x,yo,train_size=0.8,
-                                               random_state=112,stratify=y)
+                                               random_state=112,stratify=yo)
 
 model=Sequential()
 model.add(Dense(1,input_shape=(13,)))
@@ -84,7 +85,7 @@ model.add(Dense(7,activation='softmax'))
 model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['acc'])
 es=EarlyStopping(monitor='val_acc',mode='min',patience=2000,verbose=1,
                  restore_best_weights=True)
-hist=model.fit(x_train,y_train,epochs=200,batch_size=500,validation_split=0.2,callbacks=[es])
+hist=model.fit(x_train,y_train,epochs=4000,batch_size=500,validation_split=0.2,callbacks=[es])
 
 result=model.evaluate(x_test,y_test)
 print("loss",result[0])
@@ -93,7 +94,7 @@ y_predict=model.predict(x_test)
 
 arg_y_test=np.argmax(y_test,axis=1)
 arg_y_predict=np.argmax(y_predict,axis=1)
-f1_score=f1_score(arg_y_test,arg_y_predict,average=None)
+f1_score=f1_score(arg_y_test,arg_y_predict,average='macro')
 print("f1_score:",f1_score)
 y_submit=np.argmax(model.predict(test_csv),axis=1)
 y_submit=train_le.inverse_transform(y_submit)
