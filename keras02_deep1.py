@@ -10,7 +10,7 @@ y = np.array([1,2,3])
 #2. model
 
 model = Sequential()
-model.add(Dense(3, input_dim=1))
+model.add(Dense(3, input_dim=1))123
 model.add(Dense(1))
 model.add(Dense(2))
 model.add(Dense(11))
