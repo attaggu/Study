@@ -94,7 +94,7 @@ y_predict=model.predict(x_test)
 
 arg_y_test=np.argmax(y_test,axis=1)
 arg_y_predict=np.argmax(y_predict,axis=1)
-f1_score=f1_score(arg_y_test,arg_y_predict,average='macro')
+f1_score=f1_score(arg_y_test,arg_y_predict,average='weighted')
 print("f1_score:",f1_score)
 y_submit=np.argmax(model.predict(test_csv),axis=1)
 y_submit=train_le.inverse_transform(y_submit)

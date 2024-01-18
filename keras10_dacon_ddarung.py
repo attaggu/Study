@@ -23,7 +23,7 @@ submission_csv = pd.read_csv(path + "submission.csv")
 print(submission_csv) 
 
 print(train_csv.shape)  #(1459, 10) 11 에서 id가 빠져서 10 / 10번째꺼는 count=y
-print(test_csv.shape)   #(715, 9) 11에서 id가 빠져서 10
+print(test_csv.shape)   #(715, 9) 10에서 id가 빠져서 9
 print(submission_csv.shape) #(715, 2)---아이디 2개 중복
 
 print(train_csv.columns)    
@@ -79,23 +79,22 @@ model.fit(x_train,y_train, epochs=1000, batch_size=100)
 loss=model.evaluate(x_test, y_test)
 y_submit = model.predict(test_csv)
 print(y_submit)
-print(y_submit.shape)   #(715, 1) submission count 컬럼에 집어 넣는다
+print(y_submit.shape)   #(715, 1) 
 
 
-print("+++++++++++++++++++++++++++++++++")
 ############submission.csv 만들기 (count컬럼 값만 넣어주면 됨)############
 
-submission_csv['count']=y_submit # submission 안 count 컬럼에
+submission_csv['count']=y_submit # submission 안 count 컬럼에 집어넣다
 print(submission_csv)
 submission_csv.to_csv(path + "submission_0105.csv", index=False) # 파일 생성(index 제거)
 
 y_predict=model.predict(x_test)
 
 r2 = r2_score(y_test,y_predict)
+print("loss:", loss)
 
 print("R2_score:",r2)
 
-print("loss:", loss)
 ### train 결축 제거 , test 결축 평균 ###
 
 

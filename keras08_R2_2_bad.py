@@ -35,5 +35,6 @@ r2 = r2_score(y_test,y_predict)
 print("loss:",loss)
 print("R2 score:", r2)
 print("time:",round(end_time-start_time,2), "초")
+
 # loss: 33.635921478271484
 # R2 score: 0.09580855468088734

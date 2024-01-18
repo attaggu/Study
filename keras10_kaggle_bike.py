@@ -10,7 +10,7 @@ from keras.layers import Dense
 #1. data
 
 path = "c://_data//kaggle//bike//"
-train_csv = pd.read_csv(path + "train.csv", index_col=0)
+train_csv = pd.read_csv(path + "train.csv", index_col=0)    #1열을 인덱스로잡음
 print(train_csv)
 test_csv = pd.read_csv(path + "test.csv", index_col=0)
 print(test_csv)
@@ -45,13 +45,15 @@ y = train_csv['count']
 print(y)
 x_train,x_test,y_train,y_test = train_test_split(x,y,
                                                  train_size=0.7,
-                                                 random_state=84325)
+                                                 random_state=1278)
 model=Sequential()
 model.add(Dense(64, input_dim=8,activation='relu'))   #model.add(Dense(64, input_dim=8, activation='relu')) - activation활성화함수
 model.add(Dense(32,activation='relu'))
 model.add(Dense(16,activation='relu'))
 model.add(Dense(32))
 model.add(Dense(16))
+model.add(Dense(32))
+model.add(Dense(64))
 model.add(Dense(32))
 model.add(Dense(16))
 model.add(Dense(32))
@@ -61,8 +63,8 @@ model.add(Dense(4,activation='relu'))
 model.add(Dense(2,activation='relu'))
 model.add(Dense(1)) #마지막 최종 아웃풋레이어에는 'relu'를 잘사용하지 않음(거의 안씀)
 #3. compile, fit
-model.compile(loss='mse',optimizer='adam')
-model.fit(x_train,y_train,epochs=100, batch_size=10)
+model.compile(loss='mae',optimizer='adam')
+model.fit(x_train,y_train,epochs=100, batch_size=50)
 loss=model.evaluate(x_test,y_test)
 
 y_submit=model.predict(test_csv)

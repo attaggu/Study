@@ -16,6 +16,8 @@ test_csv = test_csv.fillna(test_csv.mean())
 x = train_csv.drop(['count'],axis=1)
 y = train_csv['count'] 
 x_train,x_test,y_train,y_test=train_test_split(x,y,train_size=0.75,random_state=563)
+print(train_csv.shape)
+print(test_csv.shape)
 
 model=Sequential()
 model.add(Dense(9, input_dim=9))

@@ -40,6 +40,7 @@ model.add(Dense(4))
 model.add(Dense(3))
 model.add(Dense(2))
 model.add(Dense(1))
+
 # model = Sequential()
 # model.add(Dense(3, input_dim=1))
 # model.add(Dense(6, input_dim=3))

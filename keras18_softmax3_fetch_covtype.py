@@ -23,6 +23,8 @@ print(pd.value_counts(y))
 
 #1.
 # y_ohe=to_categorical(y)
+#슬라이싱해서 0번째를 자름 / 7을 0으로 바꿀수있다 - 라벨값이 평등 / 0부터 라벨링이 줄어듬
+#최대값에서 +1만큼 만들어줌 ()
 # print(y_ohe)
 # print(y_ohe.shape)  #(178, 3)
 #2.

@@ -55,7 +55,7 @@ x_train,x_test,y_train,y_test = train_test_split(x,y,
 # print(hist.history['loss'])     #loss만 따로
 # print(hist.history['val_loss'])     #val_loss만 따로
 
-model=load_model('../_data/_save/MCP/keras25_test_MCP.hdf5')
+model=load_model('../_data/_save/MCP/keras25_MCP1.hdf5')
 #가중치와 모델 전부 저장돼어 불러와진다
 
 loss = model.evaluate(x_test,y_test)

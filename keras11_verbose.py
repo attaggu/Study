@@ -27,7 +27,7 @@ model.add(Dense(1))
 
 model.compile(loss='mse', optimizer='adam')
 
-model.fit(x_train,y_train, epochs=100, batch_size=10,
+model.fit(x_train,y_train, epochs=1000, batch_size=400,
           verbose=2)
 #verbose=0 : 침묵(출력X)
 #verbose=1 : 디폴트(정보를 상세하게 출력)

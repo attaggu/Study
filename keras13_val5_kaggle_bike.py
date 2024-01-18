@@ -47,9 +47,9 @@ r2=r2_score(y_test,y_predict)
 print("loss:",loss)
 print("r2:",r2)
 print("음수갯수:",submission_csv[submission_csv['count']<0].count())    ###중요###
-def RMSE(y_test,y_predict):
+def RMSE(a,b):
     # mean_squared_error(y_test,y_predict)
-    return np.sqrt(mean_squared_error(y_test,y_predict))
+    return np.sqrt(mean_squared_error(a,b))
 rmse = RMSE(y_test,y_predict)
 print("MSE:", loss)
 print("RMSE:",rmse)

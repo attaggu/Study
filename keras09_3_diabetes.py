@@ -36,3 +36,4 @@ r2 = r2_score(y_test,y_predict)
 print("loss:",loss)
 print("R2_score:",r2)
 print("time:",round(end_time-start_time,2),"s")
+

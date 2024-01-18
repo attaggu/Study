@@ -79,6 +79,14 @@ result=model.predict(x)
 r2 = r2_score(y_test,y_predict)
 print("loss:",loss)
 print("R2_score:",r2)
+hist=model.history
+print(hist)
+print(hist.history)
+
+
+# if 'loss' in hist.history:
+#     loss=hist.history['loss']
+#     print("aaa")
 
 # loss: [4.944716930389404, 0.0]
 # R2_score: 0.4353930567717563

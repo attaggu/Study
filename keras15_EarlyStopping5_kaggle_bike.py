@@ -18,6 +18,8 @@ x = train_csv.drop(['count','casual','registered'],axis=1)
 y = train_csv['count']
 x_train,x_test,y_train,y_test = train_test_split(x,y,train_size=0.75,random_state=1414)
 
+
+
 model=Sequential()
 model.add(Dense(4, input_dim=8,activation='relu'))   #model.add(Dense(64, input_dim=8, activation='relu')) - activation활성화함수
 model.add(Dense(32,activation='relu'))
@@ -70,3 +72,4 @@ print("RMSE:",rmse)
 # plt.ylabel('loss')
 # plt.grid()
 # plt.show()
+
