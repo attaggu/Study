@@ -26,6 +26,7 @@ print(test_csv.shape)
 x_train,x_test,y_train,y_test=train_test_split(x,y,train_size=0.9,
                                                random_state=666)
 
+
 # scaler = MinMaxScaler()
 # scaler = StandardScaler()
 scaler = MaxAbsScaler()
