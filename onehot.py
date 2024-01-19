@@ -34,6 +34,7 @@ from sklearn.preprocessing import OneHotEncoder
 y=y.reshape(-1,1)   
 ohe = OneHotEncoder()   #True 디포틀로 할시에
 y_ohe3 = ohe.fit_transform(y).toarray()
+
 ohe = OneHotEncoder(sparse=False)   #spares=True 가 디폴트
 y_ohe3 = ohe.fit_transform(y)   # fit + transform 대신 쓴다 
 # ==== ohe.fit(y)

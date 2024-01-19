@@ -1,199 +1,57 @@
-
-from keras.models import Sequential,load_model
-from keras.layers import Dense,Dropout
-from keras.callbacks import EarlyStopping,ModelCheckpoint
-from keras.utils import to_categorical
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import f1_score
-from sklearn.preprocessing import LabelEncoder,OneHotEncoder
+from tensorflow.python.keras.layers import Conv2D, Dense, Flatten, Dropout
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import MinMaxScaler,MaxAbsScaler
-from sklearn.preprocessing import RobustScaler,StandardScaler
-import datetime
+from keras.datasets import mnist
+from keras.models import Sequential
+from sklearn.preprocessing import OneHotEncoder
 
 
-path = "c://_data//dacon//dechul//"
+(X_train, y_train), (X_test, y_test) = mnist.load_data()
 
-train_csv=pd.read_csv(path+"train.csv",index_col=0)
+print(X_train.shape, y_train.shape)
+print(X_test.shape, y_test.shape)
 
-test_csv=pd.read_csv(path+"test.csv",index_col=0)
+y_train = y_train.reshape(-1, 1)
+y_test = y_test.reshape( -1, 1)
 
-sub_csv=pd.read_csv(path+"sample_submission.csv")
+ohe = OneHotEncoder(sparse_output=False)
+y_train = ohe.fit_transform(y_train)
+y_test = ohe.transform(y_test)
 
-# train_csv=train_csv[train_csv['근로기간'] != 'Unknown']
+# print(X_train[0])       # 5
+# print(pd.value_counts(y_train))
+# print(np.unique(y_train, return_counts=True))
 
-# unique,count = np.unique(train_csv['근로기간'], return_counts=True)
+X_train = X_train.reshape(60000, 28, 28, 1)
+# X_test = X_test.reshape(10000, 28, 28, 1)
+X_test = X_test.reshape(X_test.shape[0], X_test.shape[1], X_test.shape[2], 1)
+print(X_train.shape, y_train.shape)
+print(X_test.shape, y_test.shape)
 
-# train_csv.iloc[28730,3]='OWN'  
-train_csv = train_csv[train_csv['주택소유상태'] != 'ANY']
-#ANY는 하나 존재 - 삭제
-
-
-test_csv.loc[test_csv['대출목적'] == '결혼', '대출목적'] = '기타'
-# 결혼은 제거하면 갯수가 안맞음 = 기타로 변경
-# test_csv.iloc[34486,7]='기타'
-
-
-# df=pd.DataFrame(train_csv)
-# df1=pd.DataFrame(test_csv)
-
-le=LabelEncoder()
-
-
-# train_csv['대출기간']=train_le.fit_transform(train_csv['대출기간'])
-# test_csv['대출기간']=test_le.fit_transform(test_csv['대출기간'])
-# train_csv['대출기간'] = train_csv['대출기간'].str.split().str[0].astype(int)
-# test_csv['대출기간'] = test_csv['대출기간'].str.split().str[0].astype(int)
-le.fit(train_csv['주택소유상태'])
-le.fit(test_csv['주택소유상태'])
-train_csv['주택소유상태']=le.transform(train_csv['주택소유상태'])
-test_csv['주택소유상태']=le.transform(test_csv['주택소유상태'])
-
-le.fit(train_csv['대출목적'])
-le.fit(test_csv['대출목적'])
-train_csv['대출목적']=le.transform(train_csv['대출목적'])
-test_csv['대출목적']=le.transform(test_csv['대출목적'])
-
-# le.fit(train_csv['대출기간'])
-# le.fit(test_csv['대출기간'])
-train_csv['대출기간']=train_csv['대출기간'].replace({' 36 months':36,' 60 months':60}).astype(int)
-test_csv['대출기간']=test_csv['대출기간'].replace({' 36 months':36,' 60 months':60}).astype(int)
+#2 data
+model = Sequential()
+model.add(Conv2D(20, (2, 2), input_shape=(28, 28, 1), activation='relu') )
+model.add(Conv2D(30, (4, 4), activation='relu'))
+model.add(Conv2D(150, (5, 5), activation='relu'))
+model.add(Dropout(0.3))
+model.add(Conv2D(50, (6, 6), activation='relu'))
+model.add(Conv2D(60, (7, 7), activation='relu'))
+model.add(Conv2D(30, (8, 8), activation='relu'))
+model.add(Flatten())
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10, activation='softmax'))
 
 
-le.fit(train_csv['근로기간'])
-le.fit(test_csv['근로기간'])
-train_csv['근로기간']=le.transform(train_csv['근로기간'])
-test_csv['근로기간']=le.transform(test_csv['근로기간'])
 
-le.fit(train_csv['대출등급'])
+#3 compile, fit
+from keras.callbacks import EarlyStopping
+es = EarlyStopping(monitor='val_loss', mode='min', patience=60, verbose=1, restore_best_weights=True )
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
+model.fit(X_train, y_train, batch_size=300, verbose=1, epochs=10000, validation_split=0.2 , callbacks=[es])
 
-# train_csv['근로기간']=le.fit_transform(train_csv['근로기간'])
-# train_csv['주택소유상태']=le.fit_transform(train_csv['주택소유상태'])
-# train_csv['대출목적']=le.fit_transform(train_csv['대출목적'])
-
-# test_csv['근로기간']=le.fit_transform(test_csv['근로기간'])
-# test_csv['주택소유상태']=le.fit_transform(test_csv['주택소유상태'])
-# test_csv['대출목적']=le.fit_transform(test_csv['대출목적'])
-
-
-# train_csv['대출등급']=le.fit_transform(train_csv['대출등급'])
-
-
-# x=train_csv.drop('대출등급',axis=1)
-# y=train_csv['대출등급']
-
-x=train_csv.drop(['대출등급'],axis=1)
-y=train_csv['대출등급']
-
-y=y.values.reshape(-1,1)
-ohe=OneHotEncoder(sparse=False)
-ohe.fit(y)
-y=ohe.transform(y)
-# yo = to_categorical(y)
-
-# train_csv.dropna
-
-# print(np.unique(y)) #['A' 'B' 'C' 'D' 'E' 'F' 'G']
-# print(pd.value_counts(y))
-# B    28817
-# C    27623
-# A    16772
-# D    13354
-# E     7354
-# F     1954
-# G      420
-
-# print(train_csv.head(8))
-
-# print(x.shape,y.shape) #(96294, 13) (96294, 7)
-
-x_train,x_test,y_train,y_test=train_test_split(x,y,train_size=0.82,
-                                               random_state=1997,stratify=y)
-
-# scaler = MinMaxScaler()
-# scaler = StandardScaler()
-# scaler = MaxAbsScaler()
-scaler = RobustScaler()
-
-scaler.fit(x_train)
-x_train=scaler.transform(x_train)
-x_test=scaler.transform(x_test)
-
-
-model=Sequential()
-model.add(Dense(131,input_shape=(13,),activation='relu'))
-model.add(Dense(73,activation='relu'))
-model.add(Dense(131,activation='relu'))
-# model.add(Dropout(0.2))
-model.add(Dense(131,activation='relu'))
-# model.add(Dropout(0.2))
-model.add(Dense(131,activation='relu'))
-model.add(Dense(73,activation='relu'))
-# model.add(Dropout(0.2))
-model.add(Dense(131,activation='relu'))
-model.add(Dense(131,activation='relu'))
-model.add(Dense(7,activation='softmax'))
-
-
-model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['acc'])
-es=EarlyStopping(monitor='val_acc',mode='auto',patience=8000,verbose=1,
-                 restore_best_weights=True)
-# mcp=ModelCheckpoint(monitor='val_acc',mode='auto',verbose=1,save_best_only=True,
-                    # filepath=('../_data/_save/MCP/_test_MCP.hdf5'))
-hist=model.fit(x_train,y_train,epochs=8000,batch_size=1000,validation_split=0.1,callbacks=[es])
-
-result=model.evaluate(x_test,y_test)
-print("loss",result[0])
-print("acc",result[1])
-
-y_predict=model.predict(x_test)
-y_test=np.argmax(y_test,axis=1)
-y_predict=np.argmax(y_predict,axis=1)
-
-# y_test=le.inverse_transform(y_test)
-# y_predict=le.inverse_transform(y_predict)
-
-# y_submit=model.predict(test_csv)
-y_submit=model.predict(test_csv) 
-y_submit=np.argmax(y_submit,axis=1)
-y_submit=le.inverse_transform(y_submit)
-
-
-f1score=f1_score(y_test,y_predict,average='macro')
-print("f1_score:",f1score)
-# # y_submit=np.argmax(model.predict(test_csv),axis=1)
-
-sub_csv['대출등급']=y_submit
-sub_csv.to_csv(path+"sample_submission_8.csv",index=False)
-
-# scaler = MinMaxScaler()   /   f1_score: 0.3077110807495997
-
-# scaler = StandardScaler() /   f1_score: 0.31699199191443983
-
-# scaler = MaxAbsScaler()   /   f1_score: 0.3183024740291938
-
-# scaler = RobustScaler()   /   f1_score: 0.3159634653253046
-
-# loss 0.47353947162628174
-# acc 0.8445482850074768
-# f1_score: 0.7970325748260676
-
-
-print("f1:",f1score)
-print("loss:",result[0])
-print("r2:",result[1])
-plt.figure(figsize=(1,1))
-plt.plot(hist.history['loss'],c='orange',label='loss',marker='.')
-plt.plot(hist.history['val_loss'],c='red',label='val_loss',marker='.')
-plt.plot(hist.history['acc'],c='pink',label='acc',marker='.')
-plt.legend(loc='upper right')
-plt.xlabel('epoch')
-plt.ylabel('loss')
-plt.grid()
-plt.show()
-
-# loss 0.4111034572124481
-# acc 0.862438976764679
-# f1_score: 0.8328453208376894
+#3 evaluate, predict
+res = model.evaluate(X_test, y_test)
+print("loss : ", res[0])
+print("acc : ", res[1])
