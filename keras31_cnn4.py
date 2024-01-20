@@ -47,14 +47,13 @@ y_test=ohe.transform(y_test)
 model = Sequential()
 model.add(Conv2D(9, (4,4), input_shape=(28,28,1)))
 model.add(Conv2D(10,(3,3),activation='relu')) #(N,27,27,9)를 가져와서 (N,25,25,10)으로 던져줌 
-model.add(Conv2D(15,(4,4),activation='relu')) #(N,25,25,10)를 가져와서 (N,22,22,15)으로 던져줌
+model.add(Conv2D(12,(4,4),activation='relu')) #(N,25,25,10)를 가져와서 (N,22,22,15)으로 던져줌
 model.add(Flatten())    #(N,22,22,15)을 가져와서 작업
 model.add(Dropout(0.1))
 model.add(Dense(8,activation='relu'))
 model.add(Dropout(0.1))
 model.add(Dense(8,activation='relu'))
 model.add(Dropout(0.1))
-model.add(Dense(8,activation='relu'))
 model.add(Dense(8,activation='relu'))
 # shape=(행-batch_size,input_dim)
 model.add(Dense(10,activation='softmax'))    #숫자를 찾는 분류모델 / (N,27,27,10)
@@ -64,7 +63,7 @@ model.add(Dense(10,activation='softmax'))    #숫자를 찾는 분류모델 / (N
 #3.compile,fit
 model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['acc'])
 es=EarlyStopping(monitor='val_acc',mode='auto',patience=120,restore_best_weights=True)
-model.fit(x_train,y_train,epochs=400,batch_size=100,verbose=1,validation_split=0.15,
+model.fit(x_train,y_train,epochs=200,batch_size=150,verbose=1,validation_split=0.15,
           callbacks=[es])
 
 #4.evaluate,predict

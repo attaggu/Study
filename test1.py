@@ -30,16 +30,21 @@ sub_csv=pd.read_csv(path+"sample_submission.csv")
 train_csv = train_csv[train_csv['주택소유상태'] != 'ANY']
 #ANY는 하나 존재 - 삭제
 
-
 test_csv.loc[test_csv['대출목적'] == '결혼', '대출목적'] = '기타'
 # 결혼은 제거하면 갯수가 안맞음 = 기타로 변경
 # test_csv.iloc[34486,7]='기타'
 
+train_csv['대출기간']=train_csv['대출기간'].replace({'36 months':36, '60 months':60}).astype(int)
+test_csv['대출기간']=test_csv['대출기간'].replace({'36 months':36, '60 months':60}).astype(int)
+
 
 # df=pd.DataFrame(train_csv)
 # df1=pd.DataFrame(test_csv)
-
 le=LabelEncoder()
+
+train_csv['주택소유상태']=le.transform(train_csv['주택소유상태'])
+test_csv['주택소유상태']=le.transform(test_csv['주택소유상태'])
+
 
 
 # train_csv['대출기간']=train_le.fit_transform(train_csv['대출기간'])
@@ -48,8 +53,6 @@ le=LabelEncoder()
 # test_csv['대출기간'] = test_csv['대출기간'].str.split().str[0].astype(int)
 le.fit(train_csv['주택소유상태'])
 le.fit(test_csv['주택소유상태'])
-train_csv['주택소유상태']=le.transform(train_csv['주택소유상태'])
-test_csv['주택소유상태']=le.transform(test_csv['주택소유상태'])
 
 le.fit(train_csv['대출목적'])
 le.fit(test_csv['대출목적'])
@@ -58,8 +61,8 @@ test_csv['대출목적']=le.transform(test_csv['대출목적'])
 
 # le.fit(train_csv['대출기간'])
 # le.fit(test_csv['대출기간'])
-train_csv['대출기간']=train_csv['대출기간'].replace({' 36 months':36,' 60 months':60}).astype(int)
-test_csv['대출기간']=test_csv['대출기간'].replace({' 36 months':36,' 60 months':60}).astype(int)
+# train_csv['대출기간']=train_csv['대출기간'].replace({' 36 months':36,' 60 months':60}).astype(int)
+# test_csv['대출기간']=test_csv['대출기간'].replace({' 36 months':36,' 60 months':60}).astype(int)
 
 
 le.fit(train_csv['근로기간'])
@@ -120,7 +123,7 @@ scaler = RobustScaler()
 scaler.fit(x_train)
 x_train=scaler.transform(x_train)
 x_test=scaler.transform(x_test)
-
+test_csv=scaler.transform(test_csv)
 
 model=Sequential()
 model.add(Dense(29,input_shape=(13,)))
@@ -142,7 +145,7 @@ es=EarlyStopping(monitor='val_acc',mode='auto',patience=8000,verbose=1,
                  restore_best_weights=True)
 # mcp=ModelCheckpoint(monitor='val_acc',mode='auto',verbose=1,save_best_only=True,
                     # filepath=('../_data/_save/MCP/_test_MCP.hdf5'))
-hist=model.fit(x_train,y_train,epochs=8000,batch_size=1500,validation_split=0.14,callbacks=[es])
+hist=model.fit(x_train,y_train,epochs=1000,batch_size=1500,validation_split=0.14,callbacks=[es])
 
 result=model.evaluate(x_test,y_test)
 print("loss",result[0])
