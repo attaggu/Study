@@ -9,7 +9,7 @@ from sklearn.metrics import accuracy_score
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
-from keras.callbacks import EarlyStopping
+from keras.callbacks import EarlyStopping,ModelCheckpoint
 
 (x_train,y_train),(x_test,y_test)=cifar10.load_data()
 
@@ -28,21 +28,40 @@ y_test=ohe.fit_transform(y_test)
 # y_test=ohe.fit_transform(y_test)
 x_train=x_train/255
 x_test=x_test/255
+import datetime
+date=datetime.datetime.now()
+print(date) #2024-01-17 10:54:36.094603 - 
+#월,일,시간,분 정도만 추출
+print(type(date))   #<class 'datetime.datetime'>
+date=date.strftime("%m%d-%H%M")
+#%m 하면 month를 땡겨옴, %d 하면 day를 / 시간,분은 대문자
+print(date) #0117_1058
+print(type(date))   #<class 'str'> 문자열로 변경됨
+
+path='../_data/_save/MCP/'  #문자를 저장
+filename= '{epoch:04d}-{val_loss:.4f}.hdf5' #0~9999 : 4자리 숫자까지 에포 / 0.9999 소숫점 4자리 숫자까지 발로스
+filepath= "".join([path,'k31_5',date,'_',filename])
 
 model=Sequential()
-model.add(Conv2D(7,(2,2),input_shape=(32,32,3)))
-model.add(Conv2D(5,(3,3)))
-model.add(Conv2D(5,(2,2),activation='relu'))
-model.add(Conv2D(7,(2,2),activation='relu'))
+model.add(Conv2D(28,(2,2),input_shape=(32,32,3)))
+model.add(Conv2D(10,(3,3),activation='relu'))
+model.add(Conv2D(25,(3,3),activation='relu'))
 model.add(Flatten())
-model.add(Dense(10,activation='relu'))
+model.add(Dense(48,activation='relu'))
+model.add(Dense(15,activation='relu'))
+model.add(Dense(15,activation='relu'))
+model.add(Dense(40,activation='relu'))
+model.add(Dense(40,activation='relu'))
 model.add(Dense(10,activation='softmax'))
 
 model.compile(loss='categorical_crossentropy',optimizer='adam',
               metrics=['acc'])
-es=EarlyStopping(monitor='val_loss',mode='auto',patience=200,restore_best_weights=True)
-model.fit(x_train,y_train,epochs=50,batch_size=1000,verbose=1,validation_split=0.15,
-          callbacks=[es])
+es=EarlyStopping(monitor='val_loss',mode='auto',patience=400,restore_best_weights=True)
+mcp=ModelCheckpoint(monitor='val_loss',mode='auto',
+                    verbose=1,save_best_only=True,
+                    filepath=filepath)
+model.fit(x_train,y_train,epochs=750,batch_size=1288,verbose=1,validation_split=0.2,
+          callbacks=[es,mcp])
 result=model.evaluate(x_test,y_test)
 y_predict=model.predict(x_test)
 

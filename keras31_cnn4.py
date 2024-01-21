@@ -19,6 +19,22 @@ print(x_test.shape,y_test.shape)    #(10000, 28, 28) (10000,)
 print(y_train[0])   #5
 print(np.unique(y_train,return_counts=True))    #(array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], dtype=uint8), array([5923, 6742, 5958, 6131, 5842, 5421, 5918, 6265, 5851, 5949]
 
+
+import datetime
+date=datetime.datetime.now()
+print(date) #2024-01-17 10:54:36.094603 - 
+#월,일,시간,분 정도만 추출
+print(type(date))   #<class 'datetime.datetime'>
+date=date.strftime("%m%d-%H%M")
+#%m 하면 month를 땡겨옴, %d 하면 day를 / 시간,분은 대문자
+print(date) #0117_1058
+print(type(date))   #<class 'str'> 문자열로 변경됨
+
+path='../_data/_save/MCP/'  #문자를 저장
+filename= '{epoch:04d}-{val_loss:.4f}.hdf5' #0~9999 : 4자리 숫자까지 에포 / 0.9999 소숫점 4자리 숫자까지 발로스
+filepath= "".join([path,'k31',date,'_',filename]) # ""는 공간을 만든거고 그안에 join으로 합침 , ' _ ' 중간 공간
+
+
 #3차원 4차원으로 변경
 x_train=x_train.reshape(60000,28,28,1)  #data 내용,순서 안바뀌면 reshape 가능
 
@@ -47,13 +63,12 @@ y_test=ohe.transform(y_test)
 model = Sequential()
 model.add(Conv2D(9, (4,4), input_shape=(28,28,1)))
 model.add(Conv2D(10,(3,3),activation='relu')) #(N,27,27,9)를 가져와서 (N,25,25,10)으로 던져줌 
-model.add(Conv2D(12,(4,4),activation='relu')) #(N,25,25,10)를 가져와서 (N,22,22,15)으로 던져줌
+model.add(Conv2D(12,(4,4),activation='relu'))#(N,25,25,10)를 가져와서 (N,22,22,15)으로 던져줌
+model.add(Conv2D(5,(2,2),activation='relu'))
 model.add(Flatten())    #(N,22,22,15)을 가져와서 작업
 model.add(Dropout(0.1))
-model.add(Dense(8,activation='relu'))
-model.add(Dropout(0.1))
-model.add(Dense(8,activation='relu'))
-model.add(Dropout(0.1))
+model.add(Dense(17,activation='relu'))
+model.add(Dense(14,activation='relu'))
 model.add(Dense(8,activation='relu'))
 # shape=(행-batch_size,input_dim)
 model.add(Dense(10,activation='softmax'))    #숫자를 찾는 분류모델 / (N,27,27,10)
@@ -63,10 +78,18 @@ model.add(Dense(10,activation='softmax'))    #숫자를 찾는 분류모델 / (N
 #3.compile,fit
 model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['acc'])
 es=EarlyStopping(monitor='val_acc',mode='auto',patience=120,restore_best_weights=True)
-model.fit(x_train,y_train,epochs=200,batch_size=150,verbose=1,validation_split=0.15,
-          callbacks=[es])
+mcp=ModelCheckpoint(monitor='val_loss',mode='auto',
+                    verbose=1,save_best_only=True,
+                    filepath=filepath   #경로저장
+                    )
+model.fit(x_train,y_train,epochs=150,batch_size=88,verbose=1,validation_split=0.2,
+          callbacks=[es,mcp])
 
 #4.evaluate,predict
 results=model.evaluate(x_test,y_test)
 print("loss:",results[0])
 print("acc:",results[1])
+
+# loss: 0.1465 - acc: 0.9843    
+# loss: 0.1465291827917099     
+# acc: 0.9843000173568726  
