@@ -60,18 +60,18 @@ test_csv = scaler.transform(test_csv)
 
 model = Sequential()
 model.add(Dense(10, input_dim=13, activation='swish'))
-model.add(Dense(70, activation='swish')) # 80
-model.add(Dense(60, activation='swish'))
+model.add(Dense(60, activation='swish')) # 80
 model.add(Dense(20, activation='swish'))
-model.add(Dense(10, activation='swish'))
-model.add(Dense(5, activation='swish'))
-model.add(Dense(10, activation='swish'))
-model.add(Dense(5, activation='swish'))
-model.add(Dense(10, activation='swish'))
-model.add(Dense(5, activation='swish'))
-model.add(Dense(50, activation='swish'))
 model.add(Dense(40, activation='swish'))
 model.add(Dense(10, activation='swish'))
+model.add(Dense(5, activation='swish'))
+model.add(Dense(20, activation='swish'))
+model.add(Dense(5, activation='swish'))
+model.add(Dense(10, activation='swish'))
+model.add(Dense(5, activation='swish'))
+model.add(Dense(45, activation='swish'))
+model.add(Dense(7, activation='swish'))
+model.add(Dense(40, activation='swish'))
 model.add(Dense(7, activation='softmax'))
 
 
@@ -85,7 +85,7 @@ filepath = "".join([MCP_path, 'k23_', date, '_', filename])
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 es = EarlyStopping(monitor='val_loss',
                 mode='min',
-                patience=25000,
+                patience=50000,
                 verbose=1,
                 restore_best_weights=True
                 )
@@ -96,7 +96,7 @@ mcp = ModelCheckpoint(monitor='val_loss',
                       filepath=filepath,
                       )
 
-model.fit(x_train, y_train, epochs=20000, batch_size = 1400,
+model.fit(x_train, y_train, epochs=88000, batch_size = 1503,
                 validation_split=0.13,  #
                 callbacks=[es, mcp],
                 verbose=1
@@ -120,3 +120,7 @@ print("acc : ", results[1])
 print("f1 : ", f1)  
 submission_csv.to_csv(path + "submission_0117_3.csv", index=False)
 
+
+# 로스 :  0.23312613368034363  
+# acc :  0.9373485445976257    
+# f1 :  0.9129514893151703 

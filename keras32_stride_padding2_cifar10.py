@@ -43,7 +43,11 @@ filename= '{epoch:04d}-{val_loss:.4f}.hdf5' #0~9999 : 4자리 숫자까지 에�
 filepath= "".join([path,'k31_5',date,'_',filename])
 
 model=Sequential()
-model.add(Conv2D(88,(3,3),input_shape=(32,32,3)))
+model.add(Conv2D(88,(3,3),input_shape=(32,32,3),
+                 strides=2,
+                #  padding='same',
+                padding='valid'
+                 ))
 model.add(Dropout(0.2))
 model.add(Conv2D(24,(2,2),activation='relu'))
 model.add(Dropout(0.3))

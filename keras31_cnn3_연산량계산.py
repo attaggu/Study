@@ -34,7 +34,7 @@ model.add(Conv2D(15,(4,4))) #(N,25,25,10)를 가져와서 (N,22,22,15)으로 던
 # shape=(batch_size, height, width,channels)
 
 model.add(Flatten())    #(N,22,22,15)을 가져와서 작업
-#Param => 커털X입력채널X출력채널 + 출력채널(bias) 
+#Param => 커털X입력채널(인풋)X출력채널(아웃풋=필터) + 출력채널(아웃풋=필터)
 model.add(Dense(units=8))
 
 model.add(Dense(7,input_shape=(8,)))
