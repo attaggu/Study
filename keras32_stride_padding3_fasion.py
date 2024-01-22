@@ -24,10 +24,10 @@ y_train=ohe.fit_transform(y_train)
 y_test=ohe.fit_transform(y_test)
 
 model=Sequential()
-model.add(Conv2D(15,(2,2),input_shape=(28,28,1),
+model.add(Conv2D(15,(4,4),input_shape=(28,28,1),
                  strides=2,
-                 padding='valid',
-                #  padding='same'
+                #  padding='valid',
+                 padding='same'
                  ))
 model.add(Conv2D(37,(2,2),activation='relu'))
 model.add(Conv2D(51,(3,3),activation='relu'))
@@ -42,7 +42,7 @@ model.compile(loss='categorical_crossentropy',optimizer='adam',
               metrics=['acc'])
 es=EarlyStopping(monitor='val_acc',mode='auto',patience=300,
                  restore_best_weights=True)
-model.fit(x_train,y_train,epochs=250,batch_size=1133,verbose=1,
+model.fit(x_train,y_train,epochs=50,batch_size=1133,verbose=1,
           validation_split=0.18)
 
 result=model.evaluate(x_test,y_test)
