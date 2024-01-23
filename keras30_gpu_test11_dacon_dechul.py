@@ -16,7 +16,7 @@ test_csv = pd.read_csv(path + "test.csv", index_col=0 )
 print(test_csv.shape) 
 submission_csv = pd.read_csv(path + "sample_submission.csv")
 print(submission_csv.shape)  
-
+train_csv=train_csv[train_csv['주택소유상태'] !='ANY']
 test_csv.loc[test_csv['대출목적'] == '결혼' , '대출목적'] = '기타'
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 le = LabelEncoder() # 대출기간, 대출목적, 근로기간, 주택소유상태 // 라벨 인코더 : 카테고리형 피처를 숫자형으로 변환
@@ -44,7 +44,7 @@ y_ohe = ohe.transform(y)
 x_train, x_test, y_train, y_test = train_test_split(
                                                     x,
                                                     y_ohe,             
-                                                    train_size=0.91,                                                    random_state=2025,
+                                                    train_size=0.88,random_state=2424,
                                                     stratify=y_ohe,
                                                     shuffle=True,
                                                     )
@@ -61,17 +61,21 @@ test_csv = scaler.transform(test_csv)
 model = Sequential()
 model.add(Dense(10, input_dim=13, activation='swish'))
 model.add(Dense(60, activation='swish')) # 80
-model.add(Dense(20, activation='swish'))
+model.add(Dense(11, activation='swish'))
 model.add(Dense(40, activation='swish'))
-model.add(Dense(10, activation='swish'))
 model.add(Dense(5, activation='swish'))
 model.add(Dense(20, activation='swish'))
-model.add(Dense(5, activation='swish'))
-model.add(Dense(10, activation='swish'))
-model.add(Dense(5, activation='swish'))
-model.add(Dense(45, activation='swish'))
 model.add(Dense(7, activation='swish'))
+model.add(Dense(47, activation='swish'))
+model.add(Dense(10, activation='swish'))
+model.add(Dense(7, activation='swish'))
+model.add(Dense(35, activation='swish'))
+model.add(Dense(10, activation='swish'))
 model.add(Dense(40, activation='swish'))
+model.add(Dense(10, activation='swish'))
+model.add(Dense(37, activation='swish'))
+model.add(Dense(11, activation='swish'))
+model.add(Dense(43, activation='swish'))
 model.add(Dense(7, activation='softmax'))
 
 
@@ -96,7 +100,7 @@ mcp = ModelCheckpoint(monitor='val_loss',
                       filepath=filepath,
                       )
 
-model.fit(x_train, y_train, epochs=88000, batch_size = 1503,
+model.fit(x_train, y_train, epochs=77000, batch_size = 1225,
                 validation_split=0.13,  #
                 callbacks=[es, mcp],
                 verbose=1
@@ -118,8 +122,7 @@ acc = accuracy_score(y_test, y_predict)
 print("로스 : ", results[0])  
 print("acc : ", results[1])  
 print("f1 : ", f1)  
-submission_csv.to_csv(path + "submission_0117_3.csv", index=False)
-
+submission_csv.to_csv(path + "submission_0122_1.csv", index=False)
 
 # 로스 :  0.23312613368034363  
 # acc :  0.9373485445976257    

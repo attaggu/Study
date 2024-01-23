@@ -27,11 +27,12 @@ y_test = ohe.fit_transform(y_test)
 # ==== ohe.fit(y)
 #3차원 4차원으로 변경
 # x_train=x_train.reshape(60000,28,28,1) 2차원으로 변경
+
 x_train=x_train.reshape(60000,28*28)
 x_test=x_test.reshape(10000,28*28)
 # (60000, 784) (10000, 784)
 print(x_train.shape,x_test.shape)  #(60000, 28, 28, 1) (10000, 28, 28, 1)
-
+'''
 model=Sequential()
 model.add(Dense(100,input_shape=(784,)))
 model.add(Dropout(0.5))
@@ -48,3 +49,4 @@ result=model.evaluate(x_test,y_test)
 y_predict=model.predict(x_test)
 print("loss:",result[0])
 print("acc:",result[1])
+'''

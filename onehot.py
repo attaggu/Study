@@ -20,20 +20,24 @@ y=datasets.target
 
 # 1. keras
 from keras.utils import to_categorical
-# y_ohe = to_categorical(y)
-# print(y_ohe)
-# print(y_ohe.shape)
+y_ohe = to_categorical(y)
+print(y_ohe)
+print(y_ohe.shape)
 
-# # 2. pandas
-# y_ohe2 = pd.get_dummies(y)
-# print(y_ohe2)
-# print(y_ohe2.shape)
+# 2. pandas
+y_ohe2 = pd.get_dummies(y)
+print(y_ohe2)
+print(y_ohe2.shape)
 
 # 3. sklearn
 from sklearn.preprocessing import OneHotEncoder
 y=y.reshape(-1,1)   
+
+
 ohe = OneHotEncoder()   #True 디포틀로 할시에
 y_ohe3 = ohe.fit_transform(y).toarray()
+
+
 
 ohe = OneHotEncoder(sparse=False)   #spares=True 가 디폴트
 y_ohe3 = ohe.fit_transform(y)   # fit + transform 대신 쓴다 

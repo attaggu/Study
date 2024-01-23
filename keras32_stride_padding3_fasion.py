@@ -1,6 +1,4 @@
 from keras.datasets import fashion_mnist
-import numpy as np
-import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense,Conv2D,Flatten,Dropout
 from keras.utils import to_categorical
@@ -22,6 +20,7 @@ y_test=y_test.reshape(-1,1)
 ohe = OneHotEncoder(sparse=False)
 y_train=ohe.fit_transform(y_train)
 y_test=ohe.fit_transform(y_test)
+
 
 model=Sequential()
 model.add(Conv2D(15,(4,4),input_shape=(28,28,1),

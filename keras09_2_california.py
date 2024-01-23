@@ -32,7 +32,7 @@ model.add(Dense(1))
 
 model.compile(loss='mse', optimizer='adam')
 start_time = time.time()
-model.fit(x_train,y_train, epochs=4000, batch_size=200)
+model.fit(x_train,y_train, epochs=40, batch_size=200)
 end_time = time.time()
 loss=model.evaluate(x_test,y_test)
 
