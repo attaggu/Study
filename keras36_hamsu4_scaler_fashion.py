@@ -10,6 +10,8 @@ from sklearn.preprocessing import OneHotEncoder,MinMaxScaler,StandardScaler
 (x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
 print(x_train.shape, y_train.shape) # (60000, 28, 28) (60000,)
 print(y_test.shape, y_test.shape)   # (10000,) (10000,)
+x_train = x_train.reshape(60000, 28*28)
+x_test = x_test.reshape(10000, 28*28)
 
 
 #scaler 1-1
@@ -22,15 +24,14 @@ print(y_test.shape, y_test.shape)   # (10000,) (10000,)
 
 # #scaler 2-1
 # scaler=MinMaxScaler()
-#scaler.fit(x_train)
 # x_train=scaler.fit_transform(x_train)
-# x_test=scaler.fit_transform(x_test)
+# x_test=scaler.transform(x_test)
 
 # # #scaler 2-2
 # scaler=StandardScaler()
 # # scaler.fit(x_train)
 # x_train=scaler.fit_transform(x_train)
-# x_test=scaler.fit_transform(x_test)
+# x_test=scaler.transform(x_test)
 
 
 
@@ -44,8 +45,6 @@ print(pd.value_counts(y_test))
 
 # x_train = x_train.reshape(x_train.shape[0],x_train.shape[1],x_train.shape[2],1)
 # x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], x_test.shape[2], 1)
-x_train = x_train.reshape(60000, 28*28)
-x_test = x_test.reshape(10000, 28*28)
 
 y_train=y_train.reshape(-1,1)
 y_test=y_test.reshape(-1,1)

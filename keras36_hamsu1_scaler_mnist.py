@@ -18,24 +18,25 @@ print(x_test.shape,y_test.shape)    #(10000, 28, 28) (10000,)
 # print(x_train)
 # print(x_train[0])
 print(np.unique(y_train,return_counts=True)) 
-
+x_train=x_train.reshape(60000,28*28)
+x_test=x_test.reshape(10000,28*28)
 #scaler 1-1
 # x_train = x_train/255.
 # x_test = x_test/255.
 
 # #scaler 1-2
-x_train = (x_train-127.5)/127.5
-x_test = (x_test-127.5)/127.5
+# x_train = (x_train-127.5)/127.5
+# x_test = (x_test-127.5)/127.5
 
 # #scaler 2-1
-# scaler=MinMaxScaler()
-# x_train=scaler.fit_transform(x_train)
-# x_test=scaler.fit_transform(x_test)
+scaler=MinMaxScaler()
+x_train=scaler.fit_transform(x_train)
+x_test=scaler.transform(x_test)
 
 # #scaler 2-2
 # scaler=StandardScaler()
 # x_train=scaler.fit_transform(x_train)
-# x_test=scaler.fit_transform(x_test)
+# x_test=scaler.transform(x_test)
 
 
 y_train=y_train.reshape(-1,1)
@@ -48,8 +49,8 @@ y_test = ohe.fit_transform(y_test)
 #3차원 4차원으로 변경
 # x_train=x_train.reshape(60000,28,28,1) 2차원으로 변경
 
-x_train=x_train.reshape(60000,28*28)
-x_test=x_test.reshape(10000,28*28)
+# x_train=x_train.reshape(60000,28*28)
+# x_test=x_test.reshape(10000,28*28)
 # (60000, 784) (10000, 784)
 print(x_train.shape,x_test.shape)  #(60000, 28, 28, 1) (10000, 28, 28, 1)
 

@@ -60,6 +60,10 @@ model.add(Dropout(0.2))
 model.add(Dense(55,activation='relu'))
 model.add(Dense(10,activation='softmax'))
 
+
+
+
+
 model.compile(loss='categorical_crossentropy',optimizer='adam',
               metrics=['acc'])
 es=EarlyStopping(monitor='val_loss',mode='auto',patience=400,restore_best_weights=True)

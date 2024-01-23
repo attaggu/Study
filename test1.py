@@ -44,7 +44,7 @@ y_ohe = ohe.transform(y)
 x_train, x_test, y_train, y_test = train_test_split(
                                                     x,
                                                     y_ohe,             
-                                                    train_size=0.91,                                                    random_state=2025,
+                                                    train_size=0.88,                                                    random_state=2025,
                                                     stratify=y_ohe,
                                                     shuffle=True,
                                                     )
@@ -61,17 +61,19 @@ test_csv = scaler.transform(test_csv)
 model = Sequential()
 model.add(Dense(10, input_dim=13, activation='swish'))
 model.add(Dense(60, activation='swish')) # 80
-model.add(Dense(20, activation='swish'))
+model.add(Dense(12, activation='swish'))
 model.add(Dense(40, activation='swish'))
 model.add(Dense(10, activation='swish'))
 model.add(Dense(5, activation='swish'))
-model.add(Dense(20, activation='swish'))
+model.add(Dense(40, activation='swish'))
+model.add(Dense(8, activation='swish'))
 model.add(Dense(5, activation='swish'))
 model.add(Dense(10, activation='swish'))
 model.add(Dense(5, activation='swish'))
-model.add(Dense(45, activation='swish'))
+model.add(Dense(32, activation='swish'))
 model.add(Dense(7, activation='swish'))
 model.add(Dense(40, activation='swish'))
+model.add(Dense(17, activation='swish'))
 model.add(Dense(7, activation='softmax'))
 
 
@@ -96,8 +98,8 @@ mcp = ModelCheckpoint(monitor='val_loss',
                       filepath=filepath,
                       )
 
-model.fit(x_train, y_train, epochs=88000, batch_size = 1503,
-                validation_split=0.13,  #
+model.fit(x_train, y_train, epochs=9999, batch_size = 1234,
+                validation_split=0.08,  #
                 callbacks=[es, mcp],
                 verbose=1
                 )
