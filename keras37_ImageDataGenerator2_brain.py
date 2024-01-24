@@ -28,7 +28,7 @@ path_train = 'c:/_data\image/brain/train//'
 path_test = 'c:/_data\image/brain/test//'
 
 xy_train=train_datagen.flow_from_directory(path_train,
-                                           target_size=(150,150),
+                                           target_size=(200,200),
                                            batch_size=160,
                                            class_mode='binary',
                                            shuffle=True)   
@@ -38,7 +38,7 @@ print(xy_train)
 #DirectoryIterator 형식으로 x와 y가 합쳐진 상태
 
 xy_test=test_datagen.flow_from_directory(path_test,
-                                          target_size=(150,150),
+                                          target_size=(200,200),
                                           batch_size=120,
                                           class_mode='binary')
 print(xy_test)
@@ -75,7 +75,7 @@ print(np.unique(y_train,return_counts=True))
 
 print(y_train.shape,y_test.shape)   #(160, 1) (120, 1)
 model=Sequential()
-model.add(Conv2D(10,(2,2),input_shape=(150,150,3)))
+model.add(Conv2D(10,(2,2),input_shape=(200,200,3)))
 model.add(Conv2D(12,(2,2),activation='relu'))
 model.add(Conv2D(12,(2,2),activation='relu'))
 model.add(Conv2D(12,(2,2),activation='relu'))

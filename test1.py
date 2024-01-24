@@ -16,7 +16,7 @@ test_csv = pd.read_csv(path + "test.csv", index_col=0 )
 print(test_csv.shape) 
 submission_csv = pd.read_csv(path + "sample_submission.csv")
 print(submission_csv.shape)  
-
+train_csv = train_csv[train_csv['주택소유상태'] != 'ANY']
 test_csv.loc[test_csv['대출목적'] == '결혼' , '대출목적'] = '기타'
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 le = LabelEncoder() # 대출기간, 대출목적, 근로기간, 주택소유상태 // 라벨 인코더 : 카테고리형 피처를 숫자형으로 변환

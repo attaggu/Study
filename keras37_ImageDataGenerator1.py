@@ -25,6 +25,7 @@ xy_train=train_datagen.flow_from_directory(
     target_size=(200,200),  #사이즈를 맞춰 늘리거나 줄임
     batch_size=160,   #x개씩 반복으로 들어감 Iterator
     class_mode='binary',
+    color_mode='grayscale',   #흑백으로 변경 / 컬러는 'rgb'
     shuffle=True,
     )   
 # print(xy_train)
@@ -37,6 +38,7 @@ xy_test=test_datagen.flow_from_directory(
     target_size=(200,200),  #사이즈를 맞춰 늘리거나 줄임
     batch_size=120,   #x개씩 반복으로 들어감 Iterator
     class_mode='binary',
+    color_mode='grayscale',
     # shuffle=True,
     )
 # print(xy_test)
