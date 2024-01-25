@@ -50,7 +50,7 @@ mcp=ModelCheckpoint(monitor='val_loss',mode='auto',verbose=1,save_best_only=True
                     filepath=filepath)
 model.compile(loss='binary_crossentropy',optimizer='adam',
               metrics=['acc'])
-hist=model.fit(x_train,y_train,epochs=10,batch_size=20,
+hist=model.fit(x_train,y_train,epochs=30,batch_size=20,
           verbose=1,validation_split=0.1,callbacks=[es,mcp])
 
 result=model.evaluate(x_test,y_test)
@@ -74,7 +74,7 @@ for i in range(len(filename)):
     
 print(len(filename),len(y_predict)) #둘 갯수 같나 확인
 
-sub_df = pd.DataFrame({"Id":filename, "Target":y_predict})
+sub_df = pd.DataFrame({'Id':filename, 'Target':y_predict})
 sub_df.to_csv("c:/_data/kaggle/"+"subfile_0124.csv",index=False)
 
 
