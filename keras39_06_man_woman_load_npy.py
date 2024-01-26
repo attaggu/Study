@@ -23,7 +23,9 @@ y_test=np.load(np_path+'keras39_5_y_test.npy')
 print(x_train.shape,y_train.shape)#(3309, 200, 200, 3) (3309,)
 print(x_test.shape,y_test.shape)#(3309, 200, 200, 3) (3309,)
 
-model=Sequential()
+
+
+model=Sequential() 
 model.add(Conv2D(3,(2,2),input_shape=(200,200,3),
                  strides=2,padding='same'))
 model.add(MaxPooling2D())
