@@ -10,27 +10,40 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from keras.callbacks import EarlyStopping,ModelCheckpoint
-
+from keras.preprocessing.image import ImageDataGenerator
 (x_train,y_train),(x_test,y_test)=cifar10.load_data()
+x_train=x_train/255.
+x_test=x_test/255.
+
+train_generator=ImageDataGenerator(
+                                    #    horizontal_flip=True,
+                                #    zoom_range=0.3,
+                                #    height_shift_range=0.2,
+                                #    width_shift_range=0.2,
+                                #    rotation_range=40,
+                                #    shear_range=0.5,
+                                   fill_mode='nearest'
+                                )
+
 
 print(x_train.shape,y_train.shape)  #(50000, 32, 32, 3) (50000, 1)
 print(x_test.shape,y_test.shape)    #(10000, 32, 32, 3) (10000, 1)
 print(np.unique(y_train,return_counts=True))
 #(array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], dtype=uint8), array([5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000],
 
-print(y_train)
+augment_size=50000
+randidx=np.random.randint(x_train.shape[0],size=augment_size)
+
+x_augmented=x_train[randidx].copy()
+y_augmented=y_train[randidx].copy()
+x_augmented=x_augmented.reshape(x_augmented.shape[0],x_augmented.shape[1],x_augmented.shape[2],
+                                x_augmented.shape[3])
+print(x_augmented.shape)
 
 ohe = OneHotEncoder(sparse=False)
 y_train=ohe.fit_transform(y_train)
 y_test=ohe.fit_transform(y_test)
-print(y_train)
-# ohe=OneHotEncoder(sparse=False)
-# y_train=y_train.reshape(-1,1)
-# y_test=y_test.reshape(-1,1)
-# y_train=ohe.fit_transform(y_train)
-# y_test=ohe.fit_transform(y_test)
-x_train=x_train/255
-x_test=x_test/255
+
 import datetime
 date=datetime.datetime.now()
 print(date) #2024-01-17 10:54:36.094603 - 
@@ -43,7 +56,7 @@ print(type(date))   #<class 'str'> 문자열로 변경됨
 
 path='../_data/_save/MCP/'  #문자를 저장
 filename= '{epoch:04d}-{val_loss:.4f}.hdf5' #0~9999 : 4자리 숫자까지 에포 / 0.9999 소숫점 4자리 숫자까지 발로스
-filepath= "".join([path,'k31_5',date,'_',filename])
+filepath= "".join([path,'k42_3',date,'_',filename])
 
 model=Sequential()
 model.add(Conv2D(88,(3,3),input_shape=(32,32,3),
@@ -62,8 +75,6 @@ model.add(Dense(37,activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(55,activation='relu'))
 model.add(Dense(10,activation='softmax'))
-
-
 
 
 

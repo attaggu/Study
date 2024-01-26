@@ -14,7 +14,8 @@ from keras.preprocessing.image import ImageDataGenerator
 import time
 
 start=time.time()
-train_datagen=ImageDataGenerator(rescale=1./255,
+train_datagen=ImageDataGenerator(
+                                rescale=1./255,
                                 #  horizontal_flip=True,
                                 #  vertical_flip=True,
                                 #  width_shift_range=0.1,
@@ -25,7 +26,9 @@ train_datagen=ImageDataGenerator(rescale=1./255,
                                 #  fill_mode='nearest'
                                  )
 
-test_datagen=ImageDataGenerator(rescale=1./255)
+test_datagen=ImageDataGenerator(
+   rescale=1./255
+                                )
 
 path_train = 'c:/_data/image/animal/train//'
 path_test = 'c:/_data/image/animal/test//'
@@ -51,7 +54,7 @@ xy_test=test_datagen.flow_from_directory(path_test,
 print(xy_train[0][0].shape) #(19997, 150, 150, 3)
 print(xy_train[0][1].shape) #(19997,)
 print(xy_test[0][0].shape)  #(5000, 150, 150, 3)
-print(xy_test[0][1].shape)  #(5000,)
+# print(xy_test[0][1].shape)  #(5000,)
 
 # print(xy_test[0][1])
 

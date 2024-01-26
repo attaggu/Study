@@ -42,28 +42,31 @@ print(y_augmented.shape)
 #4차원으로 변경해줘야됨
 x_augmented=x_augmented.reshape(-1,28,28,1) #=(x_augmented.shape[0],28,28,1)
 
-
+#=========================================================================
 x_augmented=train_generator.flow(
     x_augmented,y_augmented,
     batch_size=augment_size,
     shuffle=False,
+    save_to_dir='c:/_data/temp/'
     ).next()[0]    #40000개의 데이터를 변환됨
 print(x_augmented)
 print(x_augmented.shape)    #(40000, 28, 28, 1) - next()[0]을 줘서 x / [1]을 주면 y
+#===========================================================================
 
-x_train=x_train.reshape(60000,28,28,1)
-x_test=x_test.reshape(10000,28,28,1)
+# x_train=x_train.reshape(60000,28,28,1)
+# x_test=x_test.reshape(10000,28,28,1)
 
-
+'''
 print(x_train.shape)
 print(x_test.shape)
 x_train = np.concatenate((x_train,x_augmented))
 y_train = np.concatenate((y_train,y_augmented))
 print(x_train.shape,y_train.shape)  #(100000, 28, 28, 1) (100000,)
 print(x_test.shape,y_test.shape)    #(10000, 28, 28, 1) (10000,)
-'''
+
 y_train=y_train.reshape(-1,1)
 y_test=y_test.reshape(-1,1)
+
 ohe=OneHotEncoder(sparse=False)
 y_train=ohe.fit_transform(y_train)
 y_test=ohe.fit_transform(y_test)

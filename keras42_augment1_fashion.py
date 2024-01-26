@@ -51,8 +51,8 @@ x_augmented=train_generator.flow(
 print(x_augmented)
 print(x_augmented.shape)    #(40000, 28, 28, 1) - next()[0]을 줘서 x / [1]을 주면 y
 
-x_train=x_train.reshape(60000,28,28,1)
-x_test=x_test.reshape(10000,28,28,1)
+# x_train=x_train.reshape(60000,28,28,1)
+# x_test=x_test.reshape(10000,28,28,1)
 
 
 print(x_train.shape)
@@ -64,6 +64,7 @@ print(x_test.shape,y_test.shape)    #(10000, 28, 28, 1) (10000,)
 
 y_train=y_train.reshape(-1,1)
 y_test=y_test.reshape(-1,1)
+
 ohe=OneHotEncoder(sparse=False)
 y_train=ohe.fit_transform(y_train)
 y_test=ohe.fit_transform(y_test)
@@ -87,3 +88,4 @@ result=model.evaluate(x_test,y_test)
 y_predict=model.predict(x_test)
 print("loss:",result[0])
 print("acc:",result[1])
+
