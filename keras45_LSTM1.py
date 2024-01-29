@@ -44,7 +44,7 @@ model.fit(x,y,epochs=1000)
 # 4 Evaluate Predict
 result=model.evaluate(x,y)
 print("loss:",result)
-y_predict=np.array([8,9,10]).reshape(1,3,1)
-y_predict=model.predict(y_predict)
+x_predict=np.array([8,9,10]).reshape(1,3,1)
+y_predict=model.predict(x_predict)
 #(3,)데이터를 -> (1,3,1)로 변경해야함
 print("???:",y_predict)
