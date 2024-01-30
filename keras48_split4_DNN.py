@@ -50,7 +50,7 @@ x_train,x_test,y_train,y_test=train_test_split(x,y,train_size=0.8)
 
 
 model=Sequential()
-model.add(LSTM(10,input_shape=(4,1)))
+model.add(Dense(10,input_shape=(4,)))
 model.add(Dense(10))
 model.add(Dense(10))
 model.add(Dense(10))
@@ -65,5 +65,4 @@ y_predict=model.predict(x_pre)
 
 print("loss:",result)
 print("???:",y_predict)
-
 

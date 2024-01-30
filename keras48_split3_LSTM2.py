@@ -26,10 +26,11 @@ print(bbb.shape)
 x = bbb[:, :-1]
 y = bbb[:, -1]
 print(x,y)
-print(x.shape,y.shape)  #(96, 4) (96,)
+print(x.shape,y.shape)  #(98, 2) (98,)
 
-x=x.reshape(-1,4,1)
+x=x.reshape(-1,2,2)
 
+print(x.shape)  #(49, 2, 2)
 x_size=4
 x_pre=split_x(x_predict,x_size)
 print(x_pre)
@@ -42,15 +43,14 @@ print(x_pre)
 #  [102 103 104 105]]
 
 
-x_pre=x_pre.reshape(-1,4,1)
+x_pre=x_pre.reshape(-1,2,2)
 print(x_pre.shape)
-
 
 x_train,x_test,y_train,y_test=train_test_split(x,y,train_size=0.8)
 
 
 model=Sequential()
-model.add(LSTM(10,input_shape=(4,1)))
+model.add(LSTM(10,input_shape=(2,2)))
 model.add(Dense(10))
 model.add(Dense(10))
 model.add(Dense(10))
@@ -65,5 +65,4 @@ y_predict=model.predict(x_pre)
 
 print("loss:",result)
 print("???:",y_predict)
-
 
