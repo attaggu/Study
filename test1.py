@@ -19,7 +19,7 @@ print(submission_csv.shape)
 train_csv = train_csv[train_csv['주택소유상태'] != 'ANY']
 test_csv.loc[test_csv['대출목적'] == '결혼' , '대출목적'] = '기타'
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
-le = LabelEncoder() # 대출기간, 대출목적, 근로기간, 주택소유상태 // 라벨 인코더 : 카테고리형 피처를 숫자형으로 변환
+le = LabelEncoder()
 train_csv['주택소유상태'] = le.fit_transform(train_csv['주택소유상태'])
 train_csv['대출목적'] = le.fit_transform(train_csv['대출목적'])
 train_csv['대출기간'] = train_csv['대출기간'].str.slice(start=0,stop=3).astype(int)
@@ -36,52 +36,49 @@ x = train_csv.drop(['대출등급'], axis=1)
 y = train_csv['대출등급']
 
 
-y = np.reshape(y, (-1,1)) 
-ohe = OneHotEncoder(sparse = False)
-ohe.fit(y)
-y_ohe = ohe.transform(y)
+
 
 x_train, x_test, y_train, y_test = train_test_split(
                                                     x,
-                                                    y_ohe,             
-                                                    train_size=0.88,                                                    random_state=2025,
-                                                    stratify=y_ohe,
+                                                    y,             
+                                                    train_size=0.82,                                                   
+                                                    random_state=661,
+                                                    stratify=y,
                                                     shuffle=True,
                                                     )
-
-
-smote=SMOTE(random_state=123)
-x_train,y_train=smote.fit_resample(x_train,y_train)
-
-
+# smote=SMOTE(random_state=29,k_neighbors=4)
+# x_train,y_train=smote.fit_resample(x_train,y_train)
 
 
 from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler
 from sklearn.preprocessing import StandardScaler, RobustScaler 
 
-scaler = StandardScaler() # 클래스 정의
-
+# scaler = StandardScaler() # 클래스 정의
+scaler=StandardScaler()
 scaler.fit(x_train)
+
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 test_csv = scaler.transform(test_csv)
 
 
 model = Sequential()
-model.add(Dense(10, input_dim=13, activation='swish'))
-model.add(Dense(60, activation='swish')) 
-model.add(Dense(12, activation='swish'))
-model.add(Dense(40, activation='swish'))
-model.add(Dense(10, activation='swish'))
-model.add(Dense(5, activation='swish'))
-model.add(Dense(40, activation='swish'))
-model.add(Dense(8, activation='swish'))
-model.add(Dense(5, activation='swish'))
-model.add(Dense(10, activation='swish'))
-model.add(Dense(5, activation='swish'))
-model.add(Dense(32, activation='swish'))
-model.add(Dense(7, activation='swish'))
-model.add(Dense(40, activation='swish'))
+model.add(Dense(13, input_dim=13, activation='swish'))
+model.add(Dense(37, activation='swish')) 
+model.add(Dense(13, activation='swish'))
+model.add(Dense(31, activation='swish'))
+model.add(Dense(13, activation='swish'))
+model.add(Dense(41, activation='swish'))
+model.add(Dense(11, activation='swish'))
+model.add(Dense(37, activation='swish'))
+model.add(Dense(17, activation='swish'))
+model.add(Dense(37, activation='swish'))
+model.add(Dense(19, activation='swish'))
+model.add(Dense(39, activation='swish'))
+model.add(Dense(19, activation='swish'))
+model.add(Dense(37, activation='swish'))
+model.add(Dense(11, activation='swish'))
+model.add(Dense(47, activation='swish'))
 model.add(Dense(17, activation='swish'))
 model.add(Dense(7, activation='softmax'))
 
@@ -93,49 +90,50 @@ MCP_path = "../_data/_save/MCP/"
 filename = '{epoch:04d}-{val_loss:.4f}.hdf5'
 filepath = "".join([MCP_path, 'k23_', date, '_', filename])
 
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 es = EarlyStopping(monitor='val_loss',
                 mode='min',
-                patience=50000,
+                patience=25000,
                 verbose=1,
                 restore_best_weights=True
                 )
 mcp = ModelCheckpoint(monitor='val_loss',
-                      mode='auto',
+                      mode='min',
                       verbose=1,
                       save_best_only=True,
                       filepath=filepath,
                       )
 
-model.fit(x_train, y_train, epochs=30000, batch_size = 1234,
-                validation_split=0.88,
+model.fit(x_train, y_train, epochs=55799, batch_size = 1500,
+                validation_split=0.08,  #
                 callbacks=[es, mcp],
                 verbose=1
                 )
 
 results = model.evaluate(x_test, y_test)
 y_predict = model.predict(x_test)
-arg_predict = np.argmax(y_predict, axis=1)  
-arg_test = np.argmax(y_test, axis=1)
+y_predict = np.argmax(y_predict, axis=1)  
+# arg_test = np.argmax(y_test, axis=1)
 y_submit = model.predict(test_csv)
 submit = np.argmax(y_submit, axis=1)
 submitssion = le.inverse_transform(submit)
       
 submission_csv['대출등급'] = submitssion
-y_predict = ohe.inverse_transform(y_predict)
-y_test = ohe.inverse_transform(y_test)
+# y_predict = ohe.inverse_transform(y_predict)
+# y_test = ohe.inverse_transform(y_test)
 f1 = f1_score(y_test, y_predict, average='macro')
 acc = accuracy_score(y_test, y_predict)
 print("로스 : ", results[0])  
 print("acc : ", results[1])  
 print("f1 : ", f1)  
-submission_csv.to_csv(path + "submission_0126_3.csv", index=False)
+submission_csv.to_csv(path + "submission_0131_3.csv", index=False)
 
 
-# 로스 :  0.23312613368034363  
-# acc :  0.9373485445976257    
-# f1 :  0.9129514893151703 
 
-# 로스 :  0.43464866280555725
-# acc :  0.8559920787811279
-# f1 :  0.8561835820093775
+# 로스 :  0.18222813308238983
+# acc :  0.9401142597198486
+# f1 :  0.9283210794014641
+
+# 로스 :  0.23936939239501953
+# acc :  0.9327294826507568
+# f1 :  0.9050533351534015
