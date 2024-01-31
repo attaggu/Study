@@ -20,10 +20,10 @@ y=np.load(np_path+'keras39_7_y_train.npy')
 x_train,x_test,y_train,y_test = train_test_split(x,y,random_state=123,
                                                  train_size=0.8,stratify=y) 
 model=Sequential()
-model.add(Conv2D(27,(2,2),input_shape=(300,300,3)))
-model.add(Conv2D(21,(2,2),activation='relu'))
+model.add(Conv2D(7,(2,2),input_shape=(100,100,3)))
+model.add(Conv2D(2,(2,2),activation='relu'))
 model.add(Flatten())
-model.add(Dense(25))
+model.add(Dense(5))
 model.add(Dense(2,activation='softmax'))
 
 

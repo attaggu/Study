@@ -2,7 +2,7 @@ from keras.datasets import fashion_mnist
 import numpy as np
 import numpy as np
 from keras.models import Sequential
-from keras.layers import Dense,Conv2D,Flatten,Dropout,LSTM
+from keras.layers import Dense,Conv2D,Flatten,Dropout,LSTM,Conv1D
 from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
@@ -27,7 +27,10 @@ x_train=x_train.reshape(-1,28,28)
 x_test=x_test.reshape(-1,28,28)
 
 model=Sequential()
-model.add(LSTM(15,input_shape=(28,28)))
+# model.add(LSTM(15,input_shape=(28,28)))
+model.add(Conv1D(10,2,input_shape=(28,28)))
+model.add(Conv1D(2,2))
+model.add(Flatten())
 model.add(Dense(18,activation='relu'))
 model.add(Dense(38,activation='relu'))
 model.add(Dense(18,activation='relu'))

@@ -6,7 +6,7 @@ train_datagen=ImageDataGenerator(rescale=1./255,)
 path_train='c:/_data/image/people/train/'
 
 xy_train=train_datagen.flow_from_directory(path_train,
-                                           target_size=(200,200),
+                                           target_size=(100,100),
                                            batch_size=5000,
                                            class_mode='binary',
                                            shuffle=True)
@@ -14,7 +14,7 @@ test_datagen=ImageDataGenerator(rescale=1./255,)
 path_test='c:/_data/image/people/test/'
 
 xy_test=test_datagen.flow_from_directory(path_test,
-                                         target_size=(200,200),
+                                         target_size=(100,100),
                                          batch_size=5000,
                                          class_mode='binary')
 print(xy_train[0][0].shape) #(3309, 200, 200, 3)

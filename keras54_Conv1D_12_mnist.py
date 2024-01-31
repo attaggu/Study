@@ -1,7 +1,7 @@
 import numpy as np
 from keras.datasets import mnist
 from keras.models import Sequential
-from keras.layers import Dense,Conv2D,Flatten,Dropout,LSTM
+from keras.layers import Dense,Conv2D,Flatten,Dropout,LSTM,Conv1D
 from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
@@ -61,8 +61,10 @@ y_test=ohe.transform(y_test)
 
 #2.model
 model = Sequential()
-model.add(LSTM(2,input_shape=(28,28)))
-model.add(Dropout(0.1))
+# model.add(LSTM(2,input_shape=(28,28)))
+model.add(Conv1D(2,2,input_shape=(28,28)))
+model.add(Conv1D(2,2))
+model.add(Flatten())
 model.add(Dense(17,activation='relu'))
 model.add(Dense(14,activation='relu'))
 model.add(Dense(8,activation='relu'))

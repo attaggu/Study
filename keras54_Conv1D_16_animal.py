@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np 
 from keras.models import Sequential
-from keras.layers import Dense,Conv2D,Flatten,Dropout,MaxPooling2D,LSTM
+from keras.layers import Dense,Conv2D,Flatten,Dropout,MaxPooling2D,LSTM,Conv1D
 from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
@@ -32,7 +32,10 @@ test=test.reshape(-1,100,100*3)
 print(x_train.shape)    #(2400, 100, 100, 3)
 
 model=Sequential()
-model.add(LSTM(2,input_shape=(100,100*3)))
+# model.add(LSTM(2,input_shape=(100,100*3)))
+model.add(Conv1D(4,2,input_shape=(100,100*3)))
+model.add(Conv1D(2,2))
+model.add(Flatten())
 model.add(Dense(4))
 model.add(Dropout(0.25))
 model.add(Dense(3))

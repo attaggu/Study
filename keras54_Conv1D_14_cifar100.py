@@ -2,7 +2,7 @@ from keras.datasets import cifar100
 import numpy as np
 import numpy as np
 from keras.models import Sequential
-from keras.layers import Dense,Conv2D,Flatten,Dropout,LSTM
+from keras.layers import Dense,Conv2D,Flatten,Dropout,LSTM,Conv1D
 from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
@@ -28,7 +28,10 @@ x_test=x_test.reshape(-1,32,32*3)
 
 
 model=Sequential()
-model.add(LSTM(6,input_shape=(32,32*3)))
+# model.add(LSTM(6,input_shape=(32,32*3)))
+model.add(Conv1D(4,2,input_shape=(32,32*3)))
+model.add(Conv1D(2,2))
+model.add(Flatten())
 model.add(Dense(82,activation='relu'))
 model.add(Dense(82,activation='relu'))
 model.add(Dense(100,activation='softmax'))

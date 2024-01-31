@@ -10,7 +10,7 @@ test_datagen=ImageDataGenerator(rescale=1./255,)
 path_train = 'c:/_data/image/horse_human/'
 
 xy_train=train_datagen.flow_from_directory(path_train,
-                                           target_size=(300,300),
+                                           target_size=(100,100),
                                            batch_size=1500,
                                            class_mode='categorical',
                                            shuffle=True)
