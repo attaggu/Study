@@ -37,7 +37,9 @@ output11=Dense(5,activation='relu',name='bit16')(dense15)
 # model2.summary()
 
 #concatenate - model 두개를 엮음(list로)
-merge1=concatenate([output1,output11],name='mg1')
+# merge1=concatenate([output1,output11],name='mg1') 아래랑 똑같다-함수 클래스 차이
+merge1=Concatenate(name='mg1')([output1,output11])
+
 merge2=Dense(47,name='mg2')(merge1)
 merge3=Dense(311,name='mg3')(merge2)
 last_output1 = Dense(1,name='last')(merge3)
