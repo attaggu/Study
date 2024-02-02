@@ -1,13 +1,12 @@
 import numpy as np
 import pandas as pd
 from keras.models import Sequential, Model
-from keras.layers import Dense, Dropout, Input
+from keras.layers import Dense, Dropout, Input,Conv2D,Flatten
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.preprocessing import MinMaxScaler
 from keras.utils import to_categorical #
-from imblearn.over_sampling import SMOTE
 import matplotlib.pyplot as plt
 path = "C:\\_data\\dacon\\dechul\\"
 train_csv = pd.read_csv(path + "train.csv", index_col=0 )
@@ -63,17 +62,35 @@ x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 test_csv = scaler.transform(test_csv)
 
+print(x_train.shape)
 
+x_train=x_train.reshape(-1,13,1,1)
+x_test=x_test.reshape(-1,13,1,1)
+test_csv=test_csv.reshape(-1,13,1,1)
 
-input1=Input(shape=(13,))
-dense1=Dense(13,activation='swish')(input1)
-dense2=Dense(37,activation='swish')(dense1)
-dense3=Dense(13,activation='swish')(dense2)
-dense4=Dense(31,activation='swish')(dense3)
-dense5=Dense(47,activation='swish')(dense4)
-dense6=Dense(17,activation='swish')(dense5)
-output1=Dense(7,activation='swish')(dense6)
-model=Model(inputs=input1,outputs=output1)
+model = Sequential()
+model.add(Conv2D(2,(2,1),input_shape=(13,1,1)))
+model.add(Flatten())
+model.add(Dense(37, activation='swish')) 
+model.add(Dense(13, activation='swish'))
+model.add(Dense(31, activation='swish'))
+model.add(Dense(13, activation='swish'))
+model.add(Dense(41, activation='swish'))
+model.add(Dense(11, activation='swish'))
+model.add(Dense(37, activation='swish'))
+model.add(Dense(17, activation='swish'))
+model.add(Dense(37, activation='swish'))
+model.add(Dense(19, activation='swish'))
+model.add(Dense(39, activation='swish'))
+model.add(Dense(13, activation='swish'))
+model.add(Dense(41, activation='swish'))
+model.add(Dense(19, activation='swish'))
+model.add(Dense(37, activation='swish'))
+model.add(Dense(11, activation='swish'))
+model.add(Dense(47, activation='swish'))
+model.add(Dense(17, activation='swish'))
+model.add(Dense(7, activation='softmax'))
+
 
 import datetime
 date = datetime.datetime.now()
@@ -96,7 +113,7 @@ mcp = ModelCheckpoint(monitor='val_loss',
                       filepath=filepath,
                       )
 
-model.fit(x_train, y_train, epochs=55555, batch_size = 1500,
+model.fit(x_train, y_train, epochs=5, batch_size = 1500,
                 validation_split=0.12,  #
                 callbacks=[es, mcp],
                 verbose=1

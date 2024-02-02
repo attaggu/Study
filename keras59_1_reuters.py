@@ -4,7 +4,6 @@ import pandas as pd
 from keras.utils import pad_sequences
 from keras.models import Sequential
 from keras.layers import Dense,Embedding,Conv1D,Flatten,LSTM
-from keras.preprocessing.text import Tokenizer
 (x_train,y_train),(x_test,y_test)=reuters.load_data(num_words=400,
                                                     test_split=0.2
                                                     )

@@ -17,8 +17,8 @@ test_csv = pd.read_csv(path + "test.csv", index_col=0 )
 print(test_csv.shape) 
 submission_csv = pd.read_csv(path + "sample_submission.csv")
 print(submission_csv.shape)  
-# train_csv = train_csv[train_csv['주택소유상태'] != 'ANY']
-# test_csv.loc[test_csv['대출목적'] == '결혼' , '대출목적'] = '기타'
+train_csv = train_csv[train_csv['주택소유상태'] != 'ANY']
+test_csv.loc[test_csv['대출목적'] == '결혼' , '대출목적'] = '기타'
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 le = LabelEncoder()
 train_csv['주택소유상태'] = le.fit_transform(train_csv['주택소유상태'])
@@ -43,7 +43,7 @@ x_train, x_test, y_train, y_test = train_test_split(
                                                     x,
                                                     y,             
                                                     train_size=0.78,                                                   
-                                                    random_state=661,
+                                                    random_state=66101,
                                                     stratify=y,
                                                     shuffle=True,
                                                     )
@@ -67,11 +67,13 @@ model = Sequential()
 model.add(Dense(13, input_dim=13, activation='swish'))
 model.add(Dense(37, activation='swish')) 
 model.add(Dense(13, activation='swish'))
+model.add(Dense(13, activation='swish'))
 model.add(Dense(31, activation='swish'))
 model.add(Dense(13, activation='swish'))
 model.add(Dense(41, activation='swish'))
 model.add(Dense(11, activation='swish'))
 model.add(Dense(37, activation='swish'))
+model.add(Dense(17, activation='swish'))
 model.add(Dense(17, activation='swish'))
 model.add(Dense(37, activation='swish'))
 model.add(Dense(19, activation='swish'))
@@ -94,7 +96,7 @@ filepath = "".join([MCP_path, 'k23_', date, '_', filename])
 model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 es = EarlyStopping(monitor='val_loss',
                 mode='auto',
-                patience=3333,
+                patience=5000,
                 verbose=1,
                 restore_best_weights=True
                 )
@@ -105,7 +107,7 @@ mcp = ModelCheckpoint(monitor='val_loss',
                       filepath=filepath,
                       )
 
-hist=model.fit(x_train, y_train, epochs=9999, batch_size = 1302,
+hist=model.fit(x_train, y_train, epochs=11111, batch_size = 828,
                 validation_split=0.12,  #
                 callbacks=[es, mcp],
                 verbose=1
