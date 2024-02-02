@@ -18,6 +18,9 @@ submission_csv = pd.read_csv(path + "sample_submission.csv")
 print(submission_csv.shape)  
 train_csv = train_csv[train_csv['주택소유상태'] != 'ANY']
 test_csv.loc[test_csv['대출목적'] == '결혼' , '대출목적'] = '기타'
+train_csv = train_csv[train_csv['총상환이자'] != 0.0]
+
+
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 le = LabelEncoder()
 train_csv['주택소유상태'] = le.fit_transform(train_csv['주택소유상태'])
@@ -35,7 +38,6 @@ train_csv['대출등급'] = le.fit_transform(train_csv['대출등급'])
 x = train_csv.drop(['대출등급','최근_2년간_연체_횟수','총연체금액','연체계좌수'], axis=1)
 y = train_csv['대출등급']
 test_csv=test_csv.drop(['최근_2년간_연체_횟수','총연체금액','연체계좌수'],axis=1)
-
 
 
 x_train, x_test, y_train, y_test = train_test_split(
@@ -98,7 +100,7 @@ filepath = "".join([MCP_path, 'k23_', date, '_', filename])
 hist=model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['acc'])
 es = EarlyStopping(monitor='val_loss',
                 mode='auto',
-                patience=22222,
+                patience=9999,
                 verbose=1,
                 restore_best_weights=True
                 )
@@ -109,7 +111,7 @@ mcp = ModelCheckpoint(monitor='val_loss',
                       filepath=filepath,
                       )
 
-model.fit(x_train, y_train, epochs=55555, batch_size = 1500,
+model.fit(x_train, y_train, epochs=33333, batch_size = 1500,
                 validation_split=0.12,  #
                 callbacks=[es, mcp],
                 verbose=1
@@ -131,7 +133,7 @@ acc = accuracy_score(y_test, y_predict)
 print("로스 : ", results[0])  
 print("acc : ", results[1])  
 print("f1 : ", f1)  
-submission_csv.to_csv(path + "submission_0202_1.csv", index=False)
+submission_csv.to_csv(path + "submissiontt_0202_1.csv", index=False)
 # plt.figure(figsize=(10,10))
 # plt.xlabel('epochs')
 # plt.ylabel('loss')

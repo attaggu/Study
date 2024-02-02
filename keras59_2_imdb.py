@@ -12,7 +12,7 @@ print(x_train.shape,y_train.shape)  #(25000,) (25000,)
 print(x_test.shape,y_test.shape)    #(25000,) (25000,)
 print(len(x_train[0]),len(x_train[1]))  #218 189
 print(y_train[:30]) #[1 0 0 1 0 0 1 0 1 0 1 0 0 0 0 0 1 1 0 1 0 0 1 0 1 1 0 0 1 0] - 이진분류같음
-print(np.unique(y_train,return_counts=True))   
+print(np.unique(y_train,return_counts=True))                                    
 #(array([0, 1], dtype=int64), array([12500, 12500], dtype=int64)) - 이진분류 확인
 print(len(np.unique(x_train)),len(np.unique(x_test)))   #24898 24801
 print(len(np.unique(y_train)),len(np.unique(y_test)))   #2 2

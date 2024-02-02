@@ -62,7 +62,15 @@ scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 test_csv = scaler.transform(test_csv)
-
+# columns_to_scale = ['대출금액', '연간소득','총상환원금','총상환이자']
+robust = RobustScaler()
+# x_train[columns_to_scale] = robust.transform(x_train[columns_to_scale])
+# x_test[columns_to_scale]= robust.transform(x_test[columns_to_scale])
+# test_csv[columns_to_scale] = robust.transform(test_csv[columns_to_scale])
+robust.fit(x_train['대출금액','연간소득','총상환원금','총상환이자'])
+x_train=robust.transform(x_train)
+x_test =robust.transform(x_test)
+test_csv=robust.transform(test_csv)
 
 
 model = Sequential()
@@ -98,7 +106,7 @@ filepath = "".join([MCP_path, 'k23_', date, '_', filename])
 hist=model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['acc'])
 es = EarlyStopping(monitor='val_loss',
                 mode='auto',
-                patience=22222,
+                patience=9999,
                 verbose=1,
                 restore_best_weights=True
                 )
@@ -109,7 +117,7 @@ mcp = ModelCheckpoint(monitor='val_loss',
                       filepath=filepath,
                       )
 
-model.fit(x_train, y_train, epochs=55555, batch_size = 1500,
+model.fit(x_train, y_train, epochs=33333, batch_size = 1500,
                 validation_split=0.12,  #
                 callbacks=[es, mcp],
                 verbose=1
