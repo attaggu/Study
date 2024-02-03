@@ -18,7 +18,7 @@ submission_csv = pd.read_csv(path + "sample_submission.csv")
 print(submission_csv.shape)  
 train_csv = train_csv[train_csv['주택소유상태'] != 'ANY']
 test_csv.loc[test_csv['대출목적'] == '결혼' , '대출목적'] = '기타'
-train_csv = train_csv[train_csv['총상환이자'] != 0.0]
+
 
 
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
@@ -78,6 +78,8 @@ model.add(Dense(11, activation='swish'))
 model.add(Dense(37, activation='swish'))
 model.add(Dense(17, activation='swish'))
 model.add(Dense(37, activation='swish'))
+model.add(Dense(13, activation='swish'))
+model.add(Dense(49, activation='swish'))
 model.add(Dense(19, activation='swish'))
 model.add(Dense(39, activation='swish'))
 model.add(Dense(13, activation='swish'))
@@ -87,6 +89,7 @@ model.add(Dense(37, activation='swish'))
 model.add(Dense(11, activation='swish'))
 model.add(Dense(47, activation='swish'))
 model.add(Dense(17, activation='swish'))
+model.add(Dense(13, activation='swish'))
 model.add(Dense(7, activation='softmax'))
 
 
@@ -111,7 +114,7 @@ mcp = ModelCheckpoint(monitor='val_loss',
                       filepath=filepath,
                       )
 
-model.fit(x_train, y_train, epochs=33333, batch_size = 1500,
+model.fit(x_train, y_train, epochs=22222, batch_size = 1500,
                 validation_split=0.12,  #
                 callbacks=[es, mcp],
                 verbose=1

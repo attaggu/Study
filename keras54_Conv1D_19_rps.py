@@ -48,4 +48,4 @@ print("loss:",result[0])
 print("acc:",result[1])
 print(argy_predict)
 # loss: 0.044129628688097
-# acc: 0.9900793433189392
+# acc: 0.9900793433189392  
