@@ -1,14 +1,13 @@
 import numpy as np
 import pandas as pd
-from keras.models import Sequential, Model
-from keras.layers import Dense, Dropout, Input
+from keras.models import Sequential
+from keras.layers import Dense
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.preprocessing import MinMaxScaler
-from keras.utils import to_categorical #
-from imblearn.over_sampling import SMOTE
-import matplotlib.pyplot as plt
+from keras.utils import to_categorical
+
 path = "C:\\_data\\dacon\\dechul\\"
 train_csv = pd.read_csv(path + "train.csv", index_col=0 )
 print(train_csv.shape)  
@@ -18,9 +17,6 @@ submission_csv = pd.read_csv(path + "sample_submission.csv")
 print(submission_csv.shape)  
 train_csv = train_csv[train_csv['주택소유상태'] != 'ANY']
 test_csv.loc[test_csv['대출목적'] == '결혼' , '대출목적'] = '기타'
-
-
-
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 le = LabelEncoder()
 train_csv['주택소유상태'] = le.fit_transform(train_csv['주택소유상태'])
@@ -35,9 +31,10 @@ test_csv['근로기간'] = le.fit_transform(test_csv['근로기간'])
 
 train_csv['대출등급'] = le.fit_transform(train_csv['대출등급'])
 
-x = train_csv.drop(['대출등급','최근_2년간_연체_횟수','총연체금액','연체계좌수'], axis=1)
+x = train_csv.drop(['대출등급'], axis=1)
 y = train_csv['대출등급']
-test_csv=test_csv.drop(['최근_2년간_연체_횟수','총연체금액','연체계좌수'],axis=1)
+
+
 
 
 x_train, x_test, y_train, y_test = train_test_split(
@@ -48,15 +45,9 @@ x_train, x_test, y_train, y_test = train_test_split(
                                                     stratify=y,
                                                     shuffle=True,
                                                     )
-# smote=SMOTE(random_state=29,k_neighbors=4)
-# x_train,y_train=smote.fit_resample(x_train,y_train)
 
-
-from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler
 from sklearn.preprocessing import StandardScaler, RobustScaler 
 
-# scaler = StandardScaler() # 클래스 정의
-# scaler=StandardScaler()
 scaler=StandardScaler()
 
 scaler.fit(x_train)
@@ -66,30 +57,31 @@ x_test = scaler.transform(x_test)
 test_csv = scaler.transform(test_csv)
 
 
-
 model = Sequential()
-model.add(Dense(13, input_dim=10, activation='swish'))
+model.add(Dense(13, input_dim=13, activation='swish'))
 model.add(Dense(37, activation='swish')) 
 model.add(Dense(13, activation='swish'))
+model.add(Dense(23, activation='swish'))
+model.add(Dense(3, activation='swish'))
 model.add(Dense(31, activation='swish'))
 model.add(Dense(13, activation='swish'))
 model.add(Dense(41, activation='swish'))
 model.add(Dense(11, activation='swish'))
-model.add(Dense(37, activation='swish'))
+model.add(Dense(5, activation='swish'))
 model.add(Dense(17, activation='swish'))
-model.add(Dense(37, activation='swish'))
-model.add(Dense(13, activation='swish'))
-model.add(Dense(49, activation='swish'))
+model.add(Dense(7, activation='swish'))
 model.add(Dense(19, activation='swish'))
 model.add(Dense(39, activation='swish'))
 model.add(Dense(13, activation='swish'))
-model.add(Dense(41, activation='swish'))
+model.add(Dense(5, activation='swish'))
 model.add(Dense(19, activation='swish'))
 model.add(Dense(37, activation='swish'))
 model.add(Dense(11, activation='swish'))
-model.add(Dense(47, activation='swish'))
+model.add(Dense(19, activation='swish'))
+model.add(Dense(7, activation='swish'))
+model.add(Dense(23, activation='swish'))
+model.add(Dense(7, activation='swish'))
 model.add(Dense(17, activation='swish'))
-model.add(Dense(13, activation='swish'))
 model.add(Dense(7, activation='softmax'))
 
 
@@ -103,7 +95,7 @@ filepath = "".join([MCP_path, 'k23_', date, '_', filename])
 hist=model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['acc'])
 es = EarlyStopping(monitor='val_loss',
                 mode='auto',
-                patience=9999,
+                patience=25555,
                 verbose=1,
                 restore_best_weights=True
                 )
@@ -114,7 +106,7 @@ mcp = ModelCheckpoint(monitor='val_loss',
                       filepath=filepath,
                       )
 
-model.fit(x_train, y_train, epochs=22222, batch_size = 1500,
+model.fit(x_train, y_train, epochs=99999, batch_size = 1530,
                 validation_split=0.12,  #
                 callbacks=[es, mcp],
                 verbose=1
@@ -136,16 +128,7 @@ acc = accuracy_score(y_test, y_predict)
 print("로스 : ", results[0])  
 print("acc : ", results[1])  
 print("f1 : ", f1)  
-submission_csv.to_csv(path + "submissiontt_0202_1.csv", index=False)
-# plt.figure(figsize=(10,10))
-# plt.xlabel('epochs')
-# plt.ylabel('loss')
-# # plt.plot(hist.history['acc'],label='acc',color='red')
-# plt.plot(hist.history['val_acc'],label='acc',color='blue')
-# plt.legend(loc='upper right')
-# plt.grid()
-# plt.show()
-
+submission_csv.to_csv(path + "submissionbb_0202_3.csv", index=False)
 
 # 로스 :  0.16194483637809753
 # acc :  0.9443474411964417
