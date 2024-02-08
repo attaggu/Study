@@ -99,19 +99,6 @@ x1_train, x1_test, x2_train, x2_test, y1_train, y1_test, y2_train, y2_test = tra
 
 
 
-
-# print(x1_train.shape) #(993, 5, 12)
-# print(x1_test.shape) #(993,)
-# print(x2_train.shape) #(695, 5, 12)
-# print(x2_test.shape) #(298, 5, 12)
-# print(y1_train.shape) #(695, 1)
-# print(y1_test.shape) #(298, 1)
-# print(y2_train.shape) #(695, 1)
-# print(y2_test.shape) #(298, 1)
-
-
-
-
 #2. 모델구성
 
 #x_1
