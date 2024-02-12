@@ -9,6 +9,7 @@ from sklearn.preprocessing import StandardScaler,RobustScaler
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier,RandomForestRegressor
 import time
+import pandas as pd
 x,y = load_boston(return_X_y=True)
 
 x_train,x_test,y_train,y_test = train_test_split(x,y,shuffle=True,random_state=121,
@@ -34,11 +35,10 @@ print("최적의 파라미터:",model.best_params_)
 print("best_score:",model.best_score_) 
 print("model.score:", model.score(x_test,y_test)) 
 
-y_predict=model.predict(x_test)
-print("acc.score:", accuracy_score(y_test,y_predict))
-y_pred_best=model.best_estimator_.predict(x_test)
+# y_predict=model.predict(x_test)
+# print("acc.score:", accuracy_score(y_test,y_predict))
+# y_pred_best=model.best_estimator_.predict(x_test)
 
-print("best_acc.score:",accuracy_score(y_test,y_pred_best))
-print("time:",round(end_time-start_time,2),"s")
-import pandas as pd
+# print("best_acc.score:",accuracy_score(y_test,y_pred_best))
+# print("time:",round(end_time-start_time,2),"s")
 print(pd.DataFrame(model.cv_results_).T)

@@ -9,6 +9,7 @@ from sklearn.preprocessing import StandardScaler,RobustScaler
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier,RandomForestRegressor
 import time
+import pandas as pd
 path = "c:\\_data\\dacon\\ddarung\\"
 train_csv=pd.read_csv(path + "train.csv",index_col=0)
 test_csv=pd.read_csv(path + "test.csv",index_col=0)
@@ -41,11 +42,11 @@ print("최적의 파라미터:",model.best_params_)
 print("best_score:",model.best_score_) 
 print("model.score:", model.score(x_test,y_test)) 
 
-y_predict=model.predict(x_test)
-print("acc.score:", accuracy_score(y_test,y_predict))
-y_pred_best=model.best_estimator_.predict(x_test)
+# y_predict=model.predict(x_test)
+# print("acc.score:", accuracy_score(y_test,y_predict))
+# y_pred_best=model.best_estimator_.predict(x_test)
 
-print("best_acc.score:",accuracy_score(y_test,y_pred_best))
+# print("best_acc.score:",accuracy_score(y_test,y_pred_best))
 print("time:",round(end_time-start_time,2),"s")
 import pandas as pd
 print(pd.DataFrame(model.cv_results_).T)

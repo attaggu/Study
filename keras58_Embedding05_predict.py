@@ -34,7 +34,7 @@ print(token.word_index)
 token.fit_on_texts(x_predict)
 print(token.word_index)
 x_predict=token.texts_to_sequences(x_predict)
-
+ 
 x = token.texts_to_sequences(docs)  #단어를 수치화
 print(type(x))  #<class 'list'> - 리스트임
 print(x)    
