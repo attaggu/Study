@@ -36,10 +36,10 @@ print("best_score:",model.best_score_)
 print("model.score:", model.score(x_test,y_test)) 
 
 y_predict=model.predict(x_test)
-print("acc.score:", accuracy_score(y_test,y_predict))
+# print("acc.score:", accuracy_score(y_test,y_predict))
 y_pred_best=model.best_estimator_.predict(x_test)
 
-print("best_acc.score:",accuracy_score(y_test,y_pred_best))
+# print("best_acc.score:",accuracy_score(y_test,y_pred_best))
 print("time:",round(end_time-start_time,2),"s")
 import pandas as pd
 print(pd.DataFrame(model.cv_results_).T)
