@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.datasets import fetch_covtype
 from sklearn.svm import SVC
-from sklearn.model_selection import StratifiedKFold,cross_val_predict
+from sklearn.model_selection import StratifiedKFold,cross_val_predict,RandomizedSearchCV
 from sklearn.model_selection import train_test_split,KFold,cross_val_score
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import MinMaxScaler,MaxAbsScaler
@@ -57,8 +57,8 @@ parameters = [
     {"n_jobs": [-1],"min_samples_leaf": [3, 5, 7, 10], "min_samples_split": [2, 3, 5, 10]},
     {"n_jobs": [-1], "min_samples_split": [2, 3, 5, 10]}
 ]
-model = GridSearchCV(RandomForestClassifier(), parameters, cv=fold, verbose=1,
-                     refit=True, n_jobs=2)
+model = RandomizedSearchCV(RandomForestClassifier(), parameters, cv=fold, verbose=1,
+                     refit=True, n_jobs=-1,n_iter=30)
 start_time = time.time()
 model.fit(x_train,y_train)
 end_time=time.time()
@@ -76,3 +76,23 @@ print("best_acc.score:",accuracy_score(y_test,y_pred_best))
 print("time:",round(end_time-start_time,2),"s")
 import pandas as pd
 print(pd.DataFrame(model.cv_results_).T)
+
+# GridSearchCV
+# best_score: 0.7866627895706116
+# model.score: 0.5232200714463737
+# acc.score: 0.5232616100357231
+# best_acc.score: 0.5232200714463737
+# time: 41.24 s
+
+# RandomizedSearchCV
+# best_score: 0.7731760340076711
+# model.score: 0.5322339453352164
+# acc.score: 0.5322339453352164
+# best_acc.score: 0.5322339453352164
+# time: 10.24 s
+# n_iter=30
+# best_score: 0.7887951924008917
+# model.score: 0.5230954556783252
+# acc.score: 0.5230954556783252
+# best_acc.score: 0.5230123784996261
+# time: 26.75 s
