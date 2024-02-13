@@ -1,3 +1,4 @@
+
 import numpy as np
 from sklearn.svm import SVC,SVR
 from sklearn.datasets import load_boston
@@ -7,6 +8,8 @@ from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import MinMaxScaler,MaxAbsScaler
 from sklearn.preprocessing import StandardScaler,RobustScaler
 from sklearn.model_selection import GridSearchCV
+from sklearn.experimental import enable_halving_search_cv
+from sklearn.model_selection import HalvingGridSearchCV
 from sklearn.ensemble import RandomForestClassifier,RandomForestRegressor
 import time
 import pandas as pd
@@ -24,8 +27,9 @@ parameters = [
     {"n_jobs": [-1], "min_samples_split": [2, 3, 5, 10]}
 ]
 
-model = RandomizedSearchCV(RandomForestRegressor(), parameters, cv=fold, verbose=1,
-                     refit=True, n_jobs=-1)
+model = HalvingGridSearchCV(RandomForestRegressor(), parameters, cv=fold, verbose=1,
+                     refit=True, n_jobs=-1,
+                     factor=2,min_resources=60)
 start_time = time.time()
 model.fit(x_train,y_train)
 end_time=time.time()
@@ -36,17 +40,37 @@ print("best_score:",model.best_score_)
 print("model.score:", model.score(x_test,y_test)) 
 
 y_predict=model.predict(x_test)
-print("acc.score:", accuracy_score(y_test,y_predict))
+# print("acc.score:", accuracy_score(y_test,y_predict))
 y_pred_best=model.best_estimator_.predict(x_test)
 
-print("best_acc.score:",accuracy_score(y_test,y_pred_best))
+# print("best_acc.score:",accuracy_score(y_test,y_pred_best))
 print("time:",round(end_time-start_time,2),"s")
 print(pd.DataFrame(model.cv_results_).T)
 
-# GridSearchCV
-# best_score: 0.8238043523797098
-# model.score: 0.8660064755534169
-
-# RandomizedSearchCV
-# best_score: 0.818907070397231
-# model.score: 0.8591852111535847
+# n_iterations: 3
+# n_required_iterations: 6
+# n_possible_iterations: 3
+# min_resources_: 60
+# max_resources_: 404
+# aggressive_elimination: False
+# factor: 2
+# ----------
+# iter: 0
+# n_candidates: 48
+# n_resources: 60
+# Fitting 2 folds for each of 48 candidates, totalling 96 fits
+# ----------
+# iter: 1
+# n_candidates: 24
+# n_resources: 120
+# Fitting 2 folds for each of 24 candidates, totalling 48 fits
+# ----------
+# iter: 2
+# n_candidates: 12
+# n_resources: 240
+# Fitting 2 folds for each of 12 candidates, totalling 24 fits
+# 최적의 매개변수: RandomForestRegressor(min_samples_leaf=3, min_samples_split=3, n_jobs=-1)
+# 최적의 파라미터: {'min_samples_leaf': 3, 'min_samples_split': 3, 'n_jobs': -1}
+# best_score: 0.767632939401921
+# model.score: 0.8524902920031441
+# time: 2.71 s

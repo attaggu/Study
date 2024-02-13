@@ -1,8 +1,8 @@
 import numpy as np
 from sklearn.svm import SVC,SVR
-from sklearn.datasets import load_boston
-from sklearn.model_selection import StratifiedKFold,cross_val_predict,RandomizedSearchCV
-from sklearn.model_selection import train_test_split,KFold,cross_val_score
+from sklearn.datasets import fetch_california_housing
+from sklearn.model_selection import StratifiedKFold,cross_val_predict
+from sklearn.model_selection import train_test_split,KFold,cross_val_score,RandomizedSearchCV
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import MinMaxScaler,MaxAbsScaler
 from sklearn.preprocessing import StandardScaler,RobustScaler
@@ -10,11 +10,21 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier,RandomForestRegressor
 import time
 import pandas as pd
-x,y = load_boston(return_X_y=True)
+path = "c://_data//kaggle//bike//"
+train_csv=pd.read_csv(path+"train.csv",index_col=0)
+test_csv=pd.read_csv(path+"test.csv",index_col=0)
+submission_csv=pd.read_csv(path+"sampleSubmission.csv")
 
+train_csv=train_csv.dropna()
+test_csv=test_csv.fillna(test_csv.mean())
+
+x=train_csv.drop(['count','casual','registered'],axis=1)
+y=train_csv['count']
 x_train,x_test,y_train,y_test = train_test_split(x,y,shuffle=True,random_state=121,
                                                  train_size=0.8)
-
+scaler = MinMaxScaler()
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.fit_transform(x_test)
 splits = 2
 fold = KFold(n_splits=splits, shuffle=True, random_state=28)
 parameters = [
@@ -23,9 +33,8 @@ parameters = [
     {"n_jobs": [-1],"min_samples_leaf": [3, 5, 7, 10], "min_samples_split": [2, 3, 5, 10]},
     {"n_jobs": [-1], "min_samples_split": [2, 3, 5, 10]}
 ]
-
 model = RandomizedSearchCV(RandomForestRegressor(), parameters, cv=fold, verbose=1,
-                     refit=True, n_jobs=-1)
+                     refit=True, n_jobs=-1,n_iter=30)
 start_time = time.time()
 model.fit(x_train,y_train)
 end_time=time.time()
@@ -35,18 +44,21 @@ print("최적의 파라미터:",model.best_params_)
 print("best_score:",model.best_score_) 
 print("model.score:", model.score(x_test,y_test)) 
 
-y_predict=model.predict(x_test)
-print("acc.score:", accuracy_score(y_test,y_predict))
-y_pred_best=model.best_estimator_.predict(x_test)
+# y_predict=model.predict(test_csv)
+# print("acc.score:", accuracy_score(y_test,y_predict))
+# y_pred_best=model.best_estimator_.predict(x_test)
 
-print("best_acc.score:",accuracy_score(y_test,y_pred_best))
-print("time:",round(end_time-start_time,2),"s")
+# print("best_acc.score:",accuracy_score(y_test,y_pred_best))
+# print("time:",round(end_time-start_time,2),"s")
+import pandas as pd
 print(pd.DataFrame(model.cv_results_).T)
 
 # GridSearchCV
-# best_score: 0.8238043523797098
-# model.score: 0.8660064755534169
-
+# best_score: 0.3412770174894602
+# model.score: 0.36948689161357817
 # RandomizedSearchCV
-# best_score: 0.818907070397231
-# model.score: 0.8591852111535847
+# best_score: 0.3390919015795973
+# model.score: 0.35828517701328433
+# n_iter=30
+# best_score: 0.34011732336127204
+# model.score: 0.3597867076846363

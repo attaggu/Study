@@ -13,7 +13,9 @@ x,y = load_diabetes(return_X_y=True)
 
 x_train,x_test,y_train,y_test = train_test_split(x,y,shuffle=True,random_state=121,
                                                  train_size=0.8)
-
+scaler = MinMaxScaler()
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.fit_transform(x_test)
 splits = 5
 fold = KFold(n_splits=splits, shuffle=True, random_state=28)
 parameters = [

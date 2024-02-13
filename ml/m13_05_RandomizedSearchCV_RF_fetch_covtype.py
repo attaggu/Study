@@ -13,8 +13,10 @@ x,y = fetch_covtype(return_X_y=True)
 
 x_train,x_test,y_train,y_test = train_test_split(x,y,shuffle=True,random_state=121,
                                                  train_size=0.8,stratify=y)
-
-splits = 5
+scaler = MinMaxScaler()
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.fit_transform(x_test)
+splits = 3
 fold = StratifiedKFold(n_splits=splits, shuffle=True, random_state=28)
 parameters = [
     {"n_jobs": [-1],"n_estimators": [100, 200], "max_depth": [6, 10, 12], "min_samples_leaf": [3, 10]},
@@ -23,7 +25,7 @@ parameters = [
     {"n_jobs": [-1], "min_samples_split": [2, 3, 5, 10]}
 ]
 model = RandomizedSearchCV(RandomForestClassifier(), parameters, cv=fold, verbose=1,
-                     refit=True, n_jobs=-1)
+                     refit=True, n_jobs=1)
 start_time = time.time()
 model.fit(x_train,y_train)
 end_time=time.time()
