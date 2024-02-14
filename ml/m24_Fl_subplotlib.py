@@ -28,12 +28,11 @@ x_test = scaler.fit_transform(x_test)
 # 2. Model
 
 rs = 1212
-models =[DecisionTreeClassifier(random_state=rs),
-    RandomForestClassifier(random_state=rs),
-    GradientBoostingClassifier(random_state=rs),
-    # XGBClassifier(random_state=rs)
-    CustomXGBClassifier(random_state=rs)
-    ]
+model1 =DecisionTreeClassifier(random_state=rs)
+model2 = RandomForestClassifier(random_state=rs)
+model3 = GradientBoostingClassifier(random_state=rs)
+model4 = CustomXGBClassifier(random_state=rs)
+models =[model1,model2,model3,model4]
 
 for model in models:
     model.fit(x_train,y_train)
@@ -44,20 +43,37 @@ for model in models:
     # print(model, "acc", acc)
     # print(model.feature_importances_) 
     # print(type(model).__name__, ":",model.feature_importances_)   
-    print(model, ":", model.feature_importances_)
  
-    
-def plot_feature_importances_datasets(model):
-    n_features = datasets.data.shape[-1]
-    plt.barh(np.arange(n_features),model.feature_importances_,align='center')
+
+
+def plot_feature_importances_datasets(model,color):
+    n_features = len(model.feature_importances_)
+    plt.barh(np.arange(n_features),model.feature_importances_,align='center', color=color)
     plt.yticks(np.arange(n_features), datasets.feature_names)
     plt.xlabel("Feature Importances")
     plt.ylabel("Features")
     plt.ylim(-1,n_features)
     plt.title(model)
-    
-plot_feature_importances_datasets(model)
+
+colors= ['r','g','y','b']
+i=1
+for model,color in zip(models, colors) :
+    plt.subplot(2,2,i)
+    plot_feature_importances_datasets(model,color)
+    i+=1
+
 plt.show()
+
+# plt.subplot(2,2,1)
+# plot_feature_importances_datasets(model1)
+# plt.subplot(2,2,2)
+# plot_feature_importances_datasets(model2)
+# plt.subplot(2,2,3)
+# plot_feature_importances_datasets(model3)
+# plt.subplot(2,2,4)
+# plot_feature_importances_datasets(model4)
+
+# plt.show()
 
 
 

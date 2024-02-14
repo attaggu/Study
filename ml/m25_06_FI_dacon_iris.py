@@ -8,17 +8,31 @@ from sklearn.ensemble import RandomForestClassifier,GradientBoostingClassifier
 from xgboost import XGBClassifier
 import xgboost as xgb
 from sklearn.preprocessing import MinMaxScaler
-import matplotlib.pyplot as plt
-
 class CustomXGBClassifier(XGBClassifier):
     def __str__(self):
         return 'XGBClassifier()'
+# aaa = CustomXGBClassifier()
 
 # 1. Data
+# x, y=load_iris(return_X_y=True)
+path = "c://_data//dacon//iris//"
+train_csv = pd.read_csv(path+"train.csv",index_col=0)
+# print(train_csv)
+test_csv = pd.read_csv(path + "test.csv",index_col=0)
+# print(test_csv)
+submission_csv=pd.read_csv(path + "sample_submission.csv")
 
-datasets=load_iris()
-x=datasets.data
-y=datasets['target']
+x=train_csv.drop(['species'],axis=1)
+y=train_csv['species']
+# x=np.delete(x,0,axis=1) # x의 0-> 첫번째 컬럼이 삭제
+# print(x)
+
+
+
+# pd.DataFrame
+# 컬럼명 : datasets.feature_names
+
+
 
 x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.2,random_state=28,stratify=y)
 scaler = MinMaxScaler()
@@ -44,23 +58,7 @@ for model in models:
     # print(model, "acc", acc)
     # print(model.feature_importances_) 
     # print(type(model).__name__, ":",model.feature_importances_)   
-    print(model, ":", model.feature_importances_)
- 
-    
-def plot_feature_importances_datasets(model):
-    n_features = datasets.data.shape[-1]
-    plt.barh(np.arange(n_features),model.feature_importances_,align='center')
-    plt.yticks(np.arange(n_features), datasets.feature_names)
-    plt.xlabel("Feature Importances")
-    plt.ylabel("Features")
-    plt.ylim(-1,n_features)
-    plt.title(model)
-    
-plot_feature_importances_datasets(model)
-plt.show()
-
-
-
+    print(model, ":", model.feature_importances_)   
 
 # class CustomXGBClassifier(XGBClassifier):
 #     def __str__(self):

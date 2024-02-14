@@ -8,7 +8,7 @@ from sklearn.ensemble import RandomForestClassifier,GradientBoostingClassifier
 from xgboost import XGBClassifier
 import xgboost as xgb
 from sklearn.preprocessing import MinMaxScaler
-
+from sklearn.preprocessing import LabelEncoder
 # 1. Data
 path = "c://_data//dacon//wine//"
 train_csv = pd.read_csv(path + "train.csv", index_col=0)
@@ -21,6 +21,10 @@ test_csv['type']=test_csv['type'].map({'white':1,'red':0}).astype(int)
 
 x=train_csv.drop(['quality'],axis=1)
 y=train_csv['quality']
+
+label=LabelEncoder()
+label.fit(y)
+y=label.transform(y)
 x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.2,random_state=28,stratify=y)
 
 scaler = MinMaxScaler()
