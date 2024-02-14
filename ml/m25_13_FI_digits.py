@@ -19,19 +19,30 @@ datasets=load_digits()
 x=datasets.data
 y=datasets.target
 
-# x=np.delete(x,0,axis=1) # x의 0-> 첫번째 컬럼이 삭제
-# print(x)
 
-df=pd.DataFrame(x,columns=datasets.feature_names)
+# df=pd.DataFrame(x,columns=datasets.feature_names)
 
-df=df.drop(df.columns[0],axis=1)
+# x=df.drop(df.columns[0],axis=1)
 
 # pd.DataFrame
 # 컬럼명 : datasets.feature_names
+print(x.shape,y.shape)
+ 
+feature_importances = np.array([0.00000000e+00, 2.04868169e-03, 1.96248010e-02, 1.16165733e-02, 9.17970161e-03, 2.17732329e-02, 9.26480090e-03, 8.99487976e-04, 6.68528363e-05, 1.03349562e-02, 2.89055336e-02, 7.14101247e-03, 1.74140086e-02, 2.97615945e-02, 5.90585338e-03, 4.82463765e-04, 1.44885330e-05, 6.91231067e-03, 1.85601801e-02, 2.87978848e-02, 3.08498491e-02, 5.63135879e-02, 7.89223691e-03, 7.18852623e-04, 7.72368990e-05, 1.41257542e-02, 4.44042166e-02, 2.52641533e-02, 3.69064261e-02, 2.27826899e-02, 2.97133520e-02, 7.26614329e-05, 0.00000000e+00, 3.13667497e-02, 2.46402866e-02, 1.74065210e-02, 3.42372609e-02, 1.82547728e-02, 2.30402338e-02, 0.00000000e+00, 3.89623827e-05, 1.03954024e-02, 3.24027587e-02, 4.50911234e-02, 1.94760309e-02, 1.75015798e-02, 1.86267305e-02, 1.10332774e-04, 0.00000000e+00, 2.20255434e-03, 1.67518387e-02, 1.83659002e-02, 1.46395343e-02, 2.35364627e-02, 2.81350642e-02, 1.65576813e-03, 0.00000000e+00, 1.53020520e-03, 2.08037161e-02, 1.14096053e-02, 2.07444265e-02, 2.86784189e-02, 1.77509536e-02, 3.38137054e-03])
 
 
 
-x_train,x_test,y_train,y_test = train_test_split(df,y,test_size=0.2,random_state=28,stratify=y)
+sorted_indices = np.argsort(feature_importances)
+num_cols_to_keep = int(len(feature_importances) * 0.8)
+indices_to_keep = sorted_indices[-num_cols_to_keep:]
+x = x[:, indices_to_keep]
+
+print(y)
+
+
+print(x.shape,y.shape)
+'''
+x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.2,random_state=28,stratify=y)
 scaler = MinMaxScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.fit_transform(x_test)
@@ -62,16 +73,4 @@ for model in models:
 #         return 'XGBClassifier()'
 
 # print(model, ":", model.feature_importances_)   
-
-
-
-
-# print(model, "acc", acc)
-
-# print(model.feature_importances_)   
-#[0.04519231 0.         0.54879265 0.40601504] - 각각 feature 점수
-# print(model, ":",model.feature_importances_)   
-#DecisionTreeClassifier(random_state=1212) : [0.04519231 0.         0.54879265 0.40601504]
-#RandomForestClassifier(random_state=1212) : [0.09680396 0.02696853 0.39722367 0.47900384]
-#GradientBoostingClassifier(random_state=1212) : [0.01522103 0.0134919  0.27358378 0.6977033 ]
-# XGBClassifier(random_state=1212) : [0.01192079 0.02112738 0.51003134 0.45692044]
+'''

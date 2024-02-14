@@ -8,32 +8,17 @@ from sklearn.ensemble import RandomForestClassifier,GradientBoostingClassifier
 from xgboost import XGBClassifier
 import xgboost as xgb
 from sklearn.preprocessing import MinMaxScaler
+import matplotlib.pyplot as plt
+
 class CustomXGBClassifier(XGBClassifier):
     def __str__(self):
         return 'XGBClassifier()'
-# aaa = CustomXGBClassifier()
 
 # 1. Data
-# x, y=load_iris(return_X_y=True)
+
 datasets=load_iris()
 x=datasets.data
-y=datasets.target
-
-# x=np.delete(x,0,axis=1) # x의 0-> 첫번째 컬럼이 삭제
-# print(x)
-feature_importances = np.array([0.01192079, 0.02112738, 0.51003134, 0.45692044])
-sorted_indices = np.argsort(feature_importances)
-num_cols_to_keep = int(len(feature_importances) * 0.8)
-indices_to_keep = sorted_indices[-num_cols_to_keep:]
-x = x[:, indices_to_keep]
-# df=pd.DataFrame(x,columns=datasets.feature_names)
-
-# df=df.drop(df.columns[0],axis=1)
-
-# pd.DataFrame
-# 컬럼명 : datasets.feature_names
-
-
+y=datasets['target']
 
 x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.2,random_state=28,stratify=y)
 scaler = MinMaxScaler()
@@ -59,7 +44,27 @@ for model in models:
     # print(model, "acc", acc)
     # print(model.feature_importances_) 
     # print(type(model).__name__, ":",model.feature_importances_)   
-    print(model, ":", model.feature_importances_)   
+    print(model, ":", model.feature_importances_)
+ 
+    
+# def plot_feature_importances_datasets(model):
+#     n_features = datasets.data.shape[-1]
+#     plt.barh(np.arange(n_features),model.feature_importances_,align='center')
+#     plt.yticks(np.arange(n_features), datasets.feature_names)
+#     plt.xlabel("Feature Importances")
+#     plt.ylabel("Features")
+#     plt.ylim(-1,n_features)
+#     plt.title(model)
+    
+# plot_feature_importances_datasets(model)
+# plt.show()
+
+from xgboost.plotting import plot_importance
+plot_importance(model)
+plt.show()
+
+
+
 
 # class CustomXGBClassifier(XGBClassifier):
 #     def __str__(self):
