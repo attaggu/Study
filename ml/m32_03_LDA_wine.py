@@ -1,4 +1,7 @@
-from sklearn.datasets import load_iris
+# sclaer , paca 후 split
+
+
+from sklearn.datasets import load_wine
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
@@ -6,14 +9,15 @@ import sklearn as sk
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
-print(sk.__version__)   #1.1.3
 
-datasets = load_iris()
+datasets = load_wine()
 x = datasets['data']
 y = datasets.target
 
 scaler = StandardScaler()
 x = scaler.fit_transform(x)
+
+
 
 for n_classes in range(1, len(np.unique(y)) ):
     lda = LinearDiscriminantAnalysis(n_components=n_classes)

@@ -1,4 +1,7 @@
-from sklearn.datasets import load_iris
+# sclaer , paca 후 split
+
+import pandas as pd
+from sklearn.datasets import fetch_covtype
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
@@ -7,13 +10,18 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 print(sk.__version__)   #1.1.3
+path = "c://_data//dacon//iris//"
+train_csv = pd.read_csv(path+"train.csv",index_col=0)
+# print(train_csv)
+test_csv = pd.read_csv(path + "test.csv",index_col=0)
+# print(test_csv)
+submission_csv=pd.read_csv(path + "sample_submission.csv")
 
-datasets = load_iris()
-x = datasets['data']
-y = datasets.target
-
+x=train_csv.drop(['species'],axis=1)
+y=train_csv['species']
 scaler = StandardScaler()
 x = scaler.fit_transform(x)
+
 
 for n_classes in range(1, len(np.unique(y)) ):
     lda = LinearDiscriminantAnalysis(n_components=n_classes)
