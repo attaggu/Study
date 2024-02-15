@@ -17,6 +17,7 @@ x=train_csv.drop(['count'],axis=1)
 y=train_csv['count']
 x_train,x_test,y_train,y_test=train_test_split(x,y,train_size=0.8,random_state=121)
 
+
 model=Sequential()
 model.add(Dense(1,input_dim=9))
 model.add(Dense(5))

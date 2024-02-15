@@ -41,7 +41,7 @@ print(y)
 
 
 print(x.shape,y.shape)
-'''
+
 x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.2,random_state=28,stratify=y)
 scaler = MinMaxScaler()
 x_train = scaler.fit_transform(x_train)
@@ -73,4 +73,4 @@ for model in models:
 #         return 'XGBClassifier()'
 
 # print(model, ":", model.feature_importances_)   
-'''
+

@@ -17,21 +17,36 @@ class CustomXGBClassifier(XGBClassifier):
 
 # 1. Data
 # x, y=load_iris(return_X_y=True)
-path = "c://_data//dacon//wine//"
-train_csv = pd.read_csv(path + "train.csv", index_col=0)
-test_csv = pd.read_csv(path + "test.csv",index_col=0)
-# print(test_csv)
-submission_csv=pd.read_csv(path + "sample_submission.csv")
+path = "C:\\_data\\dacon\\dechul\\"
+train_csv = pd.read_csv(path + "train.csv", index_col=0 )
+print(train_csv.shape)  
+test_csv = pd.read_csv(path + "test.csv", index_col=0 )
+print(test_csv.shape) 
+submission_csv = pd.read_csv(path + "sample_submission.csv")
+print(submission_csv.shape)  
+train_csv = train_csv[train_csv['주택소유상태'] != 'ANY']
+test_csv.loc[test_csv['대출목적'] == '결혼' , '대출목적'] = '기타'
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+le = LabelEncoder()
+train_csv['주택소유상태'] = le.fit_transform(train_csv['주택소유상태'])
+train_csv['대출목적'] = le.fit_transform(train_csv['대출목적'])
+train_csv['대출기간'] = train_csv['대출기간'].str.slice(start=0,stop=3).astype(int)
+train_csv['근로기간'] = le.fit_transform(train_csv['근로기간'])
 
-train_csv['type']=train_csv['type'].map({'white':1,'red':0}).astype(int)
-test_csv['type']=test_csv['type'].map({'white':1,'red':0}).astype(int)
+test_csv['주택소유상태'] = le.fit_transform(test_csv['주택소유상태'])
+test_csv['대출목적'] = le.fit_transform(test_csv['대출목적'])
+test_csv['대출기간'] = test_csv['대출기간'].str.slice(start=0,stop=3).astype(int)
+test_csv['근로기간'] = le.fit_transform(test_csv['근로기간'])
 
-x=train_csv.drop(['quality'],axis=1)
-y=train_csv['quality']
+train_csv['대출등급'] = le.fit_transform(train_csv['대출등급'])
 
-label=LabelEncoder()
-label.fit(y)
-y=label.transform(y)
+x = train_csv.drop(['대출등급'], axis=1)
+y = train_csv['대출등급']
+
+
+# label=LabelEncoder()
+# label.fit(y)
+# y=label.transform(y)
 # x=np.delete(x,0,axis=1) # x의 0-> 첫번째 컬럼이 삭제
 # print(x)
 
