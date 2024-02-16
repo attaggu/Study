@@ -1,23 +1,27 @@
-# sclaer , paca 후 split
 
-
-from sklearn.datasets import load_digits
-from sklearn.model_selection import train_test_split
+from keras.datasets import mnist
+import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-import sklearn as sk
 from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestClassifier
-import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier,RandomForestRegressor
+import time
+from keras.models import Sequential
+from keras.layers import Dense
+from sklearn.metrics import accuracy_score
+(x_train,y_train),(x_test,y_test) = mnist.load_data()  #pca에 y는 필요없음
 
-print(sk.__version__)   #1.1.3
+start_time=time.time()
+x = np.concatenate([x_train, x_test], axis=0)
+y= np.concatenate([y_train,y_test],axis=0)
+print(x.shape)  #(70000, 28, 28)
 
-datasets = load_digits()
-x = datasets['data']
-y = datasets.target
-
+x =x.reshape(-1,28*28)
+# y =y.reshape(-1,1)
 scaler = StandardScaler()
 x = scaler.fit_transform(x)
+
 
 for n_classes in range(1, len(np.unique(y)) ):
     lda = LinearDiscriminantAnalysis(n_components=n_classes)
@@ -37,17 +41,3 @@ for n_classes in range(1, len(np.unique(y)) ):
     results = model.score(x_test, y_test)
     print('Model score:', results)
     print(lda.explained_variance_ratio_)
-
-# lda = LinearDiscriminantAnalysis()    #라벨 개수에 영향을탐 - min(n_features, n_classes - 1) ->4, 3-1 이여서 2까지만 쓸수있음 / ()=디폴트
-# x = lda.fit_transform(x,y)
-
-# print(x.shape,y.shape)  #(150, 4) (150,)
-# x_train,x_test,y_train,y_test = train_test_split(x,y,train_size=0.8,random_state=888,shuffle=True,stratify=y)
-
-# model = RandomForestClassifier(random_state=888)
-
-# model.fit(x_train,y_train)
-# results = model.score(x_test,y_test)
-# print('model.score:', results)
-
-# print(lda.explained_variance_ratio_)
