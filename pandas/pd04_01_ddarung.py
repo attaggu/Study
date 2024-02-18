@@ -17,23 +17,42 @@ submission_csv =pd.read_csv(path +"submission.csv")
 
 x=train_csv.drop(['count'],axis=1)
 y=train_csv['count']
-  
+x = x.astype('float32')
+test_csv = test_csv.astype('float32')
+x = x.interpolate() 
+test_csv = test_csv.interpolate()
 
-int(x.isnull().sum())
-print(x.info())
+# 이상치 처리 함수 정의
+def outlier(data):
+    data = pd.DataFrame(data)
+    
+    for label in data:
+        series = data[label]
+        q1 = series.quantile(0.25)
+        q3 = series.quantile(0.75)
+        
+        iqr = q3 - q1
+        upper_bound = q3 + iqr
+        lower_bound = q1 - iqr
+        
+        series[series > upper_bound] = np.nan
+        series[series < lower_bound] = np.nan
+        
+        # print(series.isna().sum())
+        series = series.interpolate()
+        data[label] = series
+        
+        data = data.fillna(data.ffill())
+        data = data.fillna(data.bfill())
+
+    return data
+
+x = outlier(x)
+test_csv = outlier(test_csv)
 
 
-# test_csv=test_csv.fillna(test_csv.mean())
-# train_csv=train_csv.dropna()
 
 
-
-
-
-
-
-
-'''
 x_train,x_test,y_train,y_test=train_test_split(x,y,train_size=0.8,random_state=121)
 
 scaler = MinMaxScaler()
@@ -63,7 +82,7 @@ filename='{epoch:04d}-{val_loss:4f}.hdf5'
 filepath="".join([path,'k26_04_dacon_ddarung_',date,'_',filename])
 
 
-es=EarlyStopping(monitor='val_loss',mode='auto',patience=200,verbose=1,
+es=EarlyStopping(monitor='val_loss',mode='auto',patience=400,verbose=1,
                  restore_best_weights=True)
 mcp=ModelCheckpoint(monitor='val_loss',mode='auto',verbose=1,
                     save_best_only=True,
@@ -91,4 +110,14 @@ def RMSE(a,b):
 rmse=RMSE(y_test,y_predict)
 print("RMSE:",rmse)
 
-'''
+
+
+# 적용전
+# loss: [2614.5166015625, 36.704158782958984]
+# r2: 0.5894699965398865
+# RMSE: 51.13234037085123
+
+# 적용후
+# loss: [2914.75390625, 39.1284294128418]
+# r2: 0.5423268407642163
+# RMSE: 53.98846024081279
