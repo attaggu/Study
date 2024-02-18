@@ -18,9 +18,7 @@ submission_csv =pd.read_csv(path +"submission.csv")
 x=train_csv.drop(['count'],axis=1)
 y=train_csv['count']
   
-  
-  
-pr
+
 int(x.isnull().sum())
 print(x.info())
 
