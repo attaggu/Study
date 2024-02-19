@@ -40,7 +40,7 @@ model.set_params(early_stopping_rounds=2,
                 )
 
 model.fit(x_train,y_train,
-          eval_set=[(x_train,y_train),(x_test,y_test)]
+          eval_set=[(x_train,y_train),(x_test,y_test)],
           verbose=True,
            #   eval_metric='rmse',   #디폴트 / 회귀
         #   eval_metric='mae',      #회귀
