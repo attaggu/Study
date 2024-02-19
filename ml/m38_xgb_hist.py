@@ -74,6 +74,15 @@ import matplotlib.pyplot as plt
 # plt.plot(hist['validation_1']['mae'], label='Validation MAE',color='green')
 plt.scatter(range(len(train_mae)), train_mae, label='Train MAE', marker='+')
 plt.scatter(range(len(val_mae)), val_mae, label='Validation MAE', marker='+')
+# o: 원 (기본값)
+# s: 사각형
+# ^: 삼각형(위를 향함)
+# v: 삼각형(아래를 향함)
+# >: 삼각형(오른쪽을 향함)
+# <: 삼각형(왼쪽을 향함)
+# x: X자
+# +: 플러스 기호
+# D: 마름모
 plt.xlabel('Number of Iterations')
 plt.ylabel('MAE')
 plt.title('Training Progress')
