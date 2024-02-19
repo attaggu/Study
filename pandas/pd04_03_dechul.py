@@ -39,18 +39,33 @@ y = train_csv['대출등급']
 x = x.astype('float32')
 test_csv = test_csv.astype('float32')
 
-def outliers(data, threshold=3):
-    z_scores = np.abs((data - data.mean()) / data.std())
-    outlier_indices = np.where(z_scores > threshold)
-    data.iloc[outlier_indices] = data.mean()  # 이상치를 평균값으로 대체
+
+def outlier(data):
+    data = pd.DataFrame(data)
+    
+    for label in data:
+        series = data[label]
+        q1 = series.quantile(0.25)
+        q3 = series.quantile(0.75)
+        
+        iqr = q3 - q1
+        upper_bound = q3 + iqr
+        lower_bound = q1 - iqr
+        
+        series[series > upper_bound] = np.nan
+        series[series < lower_bound] = np.nan
+        
+        # print(series.isna().sum())
+        series = series.interpolate()
+        data[label] = series
+        
+        data = data.fillna(data.median())
+
     return data
 
-# 이상치 처리 적용
-for column in x.columns:
-    x[column] = outliers(x[column])
-    test_csv[column] = outliers(test_csv[column])
 
-
+x = outlier(x)
+test_csv = outlier(test_csv)
 
 x_train, x_test, y_train, y_test = train_test_split(
                                                     x,
@@ -144,6 +159,6 @@ submission_csv.to_csv(path + "submissionbb_0202_1.csv", index=False)
 # acc :  0.8413028120994568
 # f1 :  0.8112846280598818
 
-# 로스 :  0.47607654333114624
-# acc :  0.8338447213172913
-# f1 :  0.7608123934208394
+# 로스 :  0.6663846373558044
+# acc :  0.7645975947380066
+# f1 :  0.6312454896022082

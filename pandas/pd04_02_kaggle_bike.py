@@ -33,7 +33,7 @@ test_csv=test_csv.astype('float32')
 
 print(x.shape)
 
-def outliers(data):
+def outlier(data):
     data = pd.DataFrame(data)
     
     for label in data:
@@ -52,13 +52,12 @@ def outliers(data):
         series = series.interpolate()
         data[label] = series
         
-        data = data.fillna(data.ffill())
-        data = data.fillna(data.bfill())
+        data = data.fillna(data.mean())
 
     return data
 
-x = outliers(x)
-test_csv = outliers(test_csv)
+x = outlier(x)
+test_csv = outlier(test_csv)
 
 
 x_train,x_test,y_train,y_test=train_test_split(x,y,train_size=0.8,random_state=819)
@@ -115,9 +114,9 @@ print("RMSE:",rmse)
 # dtype: int64
 # RMSE: 149.31829757673023
 
-# loss: [22113.46875, 111.39543151855469]
-# r2: 0.276725366446659
+# loss: [22115.94140625, 111.814697265625]
+# r2: 0.2766445755811875
 # --: datetime    0
 # count       0
 # dtype: int64
-# RMSE: 148.70598642059278
+# RMSE: 148.71429152995736
