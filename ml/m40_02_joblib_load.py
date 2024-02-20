@@ -8,7 +8,7 @@ from sklearn.model_selection import HalvingGridSearchCV, HalvingRandomSearchCV
 from sklearn.metrics import accuracy_score, f1_score,r2_score,roc_auc_score
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import pickle
-
+import joblib
 
 x,y=load_digits(return_X_y=True)
 
@@ -20,14 +20,12 @@ x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 
 # 2. model
-path = "c://_data//_save//_pickle_test//"
-model = pickle.load(open(path + 'm39_pickle_save.dat','rb'))
-
+path = "c://_data//_save//_joblib_test//"
+model = joblib.load(path + 'm40_joblib1_save.dat')
 
 results = model.score(x_test,y_test)
 y_predict=model.predict(x_test)
 print("",results)
-
 
 # print('r2:',r2_score(y_test,y_predict))
 # print("사용 파라미터:",model.get_params())
