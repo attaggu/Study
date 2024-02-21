@@ -8,6 +8,10 @@ from sklearn.metrics import f1_score, accuracy_score
 from sklearn.preprocessing import MinMaxScaler
 from keras.utils import to_categorical
 
+
+
+
+
 path = "C:\\_data\\dacon\\dechul\\"
 train_csv = pd.read_csv(path + "train.csv", index_col=0 )
 print(train_csv.shape)  
