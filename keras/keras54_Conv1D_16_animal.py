@@ -42,6 +42,9 @@ model.add(Dense(3))
 model.add(Dense(1,activation='sigmoid'))
 
 
+
+
+
 filepath = 'c:/_data/_save/MCP/animal//'
 
 es=EarlyStopping(monitor='val_loss',mode='auto',patience=100,
