@@ -11,6 +11,9 @@ import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from keras.callbacks import EarlyStopping,ModelCheckpoint
 
+
+
+
 (x_train,y_train),(x_test,y_test)=fashion_mnist.load_data()
 print(x_train.shape,y_train.shape)  #(60000, 28, 28) (60000,)
 print(x_test.shape,y_test.shape)    #(10000, 28, 28) (10000,)
