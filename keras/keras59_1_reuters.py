@@ -24,6 +24,8 @@ from keras.layers import Dense,Embedding,Conv1D,Flatten,LSTM
 # print(len(np.unique(x_test)))  #2188
 
 
+
+
 # print(type(x_train))    #<class 'numpy.ndarray'>    list가 안나옴
 # print(type(x_train[0])) #<class 'list'>
 # print(len(x_train[0]),len(x_train[1]))  #87 56 길이가 안맞음
