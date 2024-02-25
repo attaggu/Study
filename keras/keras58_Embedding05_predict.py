@@ -10,6 +10,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import OneHotEncoder
 from keras.callbacks import EarlyStopping,ModelCheckpoint
 
+
 # 1 Data
 docs = [
     '너무 재미있다', ' 참 최고에요', '참 잘만든 영화에요', '추천하고 싶은 영화입니다',
@@ -21,6 +22,7 @@ x_predict = ['나는 진짜 너무 재미없다 배고프다 졸리다 지루해
 
 
 labels = np.array([1,1,1,1,1,0,0,0,0,0,0,1,0,1,0])
+
 
 token=Tokenizer()
 token.fit_on_texts(docs)
