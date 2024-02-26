@@ -11,11 +11,13 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import MinMaxScaler,MaxAbsScaler
 from sklearn.preprocessing import RobustScaler,StandardScaler
 
+
 path = "c://_data//dacon//wine//"
 train_csv = pd.read_csv(path + "train.csv", index_col=0)
 test_csv = pd.read_csv(path + "test.csv",index_col=0)
 # print(test_csv)
 submission_csv=pd.read_csv(path + "sample_submission.csv")
+
 
 train_csv['type']=train_csv['type'].map({'white':1,'red':0}).astype(int)
 test_csv['type']=test_csv['type'].map({'white':1,'red':0}).astype(int)
