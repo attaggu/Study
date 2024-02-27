@@ -13,6 +13,8 @@ rn.seed(333)
 x=np.array([1,2,3])
 y=np.array([1,2,3])
 
+
+
 model= Sequential()
 model.add(Dense(5,input_dim=1,
                 kernel_initializer='zeros'))
