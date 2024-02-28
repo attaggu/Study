@@ -1,40 +1,36 @@
 import numpy as np
-from sklearn.datasets import load_breast_cancer
+from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
-from xgboost import XGBClassifier
+from xgboost import XGBClassifier,XGBRegressor
 from sklearn.metrics import accuracy_score
-from sklearn.ensemble import RandomForestClassifier,BaggingClassifier, VotingClassifier, StackingClassifier
-from sklearn.linear_model import LogisticRegression
-from catboost import CatBoostClassifier
-import pandas as pd
+from sklearn.ensemble import RandomForestClassifier,BaggingClassifier, VotingClassifier, StackingClassifier,StackingRegressor
+from sklearn.ensemble import BaggingRegressor, RandomForestRegressor, VotingRegressor
+from sklearn.linear_model import LogisticRegression, LinearRegression
+from catboost import CatBoostClassifier, CatBoostRegressor
 import warnings
+import pandas as pd
 warnings.filterwarnings('ignore')
 
 # 1. 데이터
-path = "c://_data//dacon//wine//"
+path = "c://_data//kaggle//bike//"
+train_csv=pd.read_csv(path+"train.csv",index_col=0)
+test_csv=pd.read_csv(path+"test.csv",index_col=0)
+submission_csv=pd.read_csv(path+"sampleSubmission.csv")
 
-train_csv = pd.read_csv(path + "train.csv", index_col=0)
-test_csv = pd.read_csv(path + "test.csv",index_col=0)
+train_csv=train_csv.dropna()
+test_csv=test_csv.fillna(test_csv.mean())
 
-submission_csv=pd.read_csv(path + "sample_submission.csv")
-
-train_csv['type']=train_csv['type'].map({'white':1,'red':0}).astype(int)
-test_csv['type']=test_csv['type'].map({'white':1,'red':0}).astype(int)
-
-
-x=train_csv.drop(['quality'],axis=1)
-y=train_csv['quality']-3
-x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=777, train_size=0.8,stratify=y)
+x=train_csv.drop(['count','casual','registered'],axis=1)
+y=train_csv['count']
+x_train,x_test,y_train,y_test=train_test_split(x,y,
+                                               train_size=0.8,
+                                               random_state=111)
 
 scaler = MinMaxScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 
-# parameters = {
-    
-    
-# }
 parameters = {
     # # 'objective': 'binary:logistic',  # 분류 문제인 경우 이진 분류를 위해 'binary:logistic'으로 설정합니다.
     # # 'eval_metric': 'logloss',  # 모델 평가 지표로 로그 손실을 사용합니다.
@@ -78,19 +74,20 @@ parameters = {
 
 
 # 2. 모델
-xgb = XGBClassifier()
-rf = RandomForestClassifier()
-lr = LogisticRegression()
+xgb = XGBRegressor()
+rf = RandomForestRegressor()
+lr = LinearRegression()
 
-model = StackingClassifier(
+model = StackingRegressor(
     estimators=[('LR',lr),('XGB', xgb),('RF', rf)],
-    final_estimator= CatBoostClassifier(verbose=0),
+    final_estimator= CatBoostRegressor(verbose=0),
     n_jobs=-1,
-    cv=5,
+    # cv=5,
 )
 
 model.fit(x_train,y_train)
 
 y_predict = model.predict(x_test)
 print('model.score :',model.score(x_test,y_test))
-print('Stacking acc :', accuracy_score(y_test,y_predict))
+# print('Stacking acc :', accuracy_score(y_test,y_predict))
+# model.score : 0.3417281616022697

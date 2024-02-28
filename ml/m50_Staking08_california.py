@@ -23,10 +23,6 @@ scaler = MinMaxScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 
-# parameters = {
-    
-    
-# }
 parameters = {
     # # 'objective': 'binary:logistic',  # 분류 문제인 경우 이진 분류를 위해 'binary:logistic'으로 설정합니다.
     # # 'eval_metric': 'logloss',  # 모델 평가 지표로 로그 손실을 사용합니다.
@@ -86,3 +82,4 @@ model.fit(x_train,y_train)
 y_predict = model.predict(x_test)
 print('model.score :',model.score(x_test,y_test))
 # print('Stacking acc :', accuracy_score(y_test,y_predict))
+# model.score : 0.8283523950711302

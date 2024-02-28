@@ -2,20 +2,28 @@ import numpy as np
 from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
-from xgboost import XGBClassifier
+from xgboost import XGBClassifier, XGBRegressor
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier,BaggingClassifier
-from sklearn.linear_model import LogisticRegression
-import warnings
-warnings.filterwarnings('ignore')
+from sklearn.ensemble import RandomForestRegressor, BaggingRegressor
 
+from sklearn.linear_model import LogisticRegression, LinearRegression
+import warnings
+import pandas as pd
+warnings.filterwarnings('ignore')
+path = "c:\\_data\\dacon\\ddarung\\"
+train_csv=pd.read_csv(path + "train.csv",index_col=0)
+test_csv=pd.read_csv(path + "test.csv",index_col=0)
+submission_csv =pd.read_csv(path +"submission.csv")
+train_csv=train_csv.dropna()
+test_csv=test_csv.fillna(test_csv.mean())
+
+x=train_csv.drop(['count'],axis=1)
+y=train_csv['count']
+
+x_train,x_test,y_train,y_test = train_test_split(x,y,random_state=111,train_size=0.8)
 # 1. 데이터
-datasets = fetch_california_housing()
-x=datasets.data
-y=datasets.target
-x_train,x_test,y_train,y_test=train_test_split(x,y,
-                                               train_size=0.8,
-                                               random_state=111)
+
 scaler = MinMaxScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
@@ -49,12 +57,12 @@ parameters = {
 #                           #디폴트 , 중복 허용 / False = 중복안허용
 #                           )
 
-model = BaggingClassifier(LogisticRegression(),
+model = BaggingRegressor(LinearRegression(),
                           n_estimators=10,
                           n_jobs=-1,
                           random_state=777,
-                          bootstrap=True,     #acc_score :  0.95
-                          # bootstrap=False,  #acc_score :  0.9555555555555556
+                          # bootstrap=True,     # 0.5921172652207852
+                          bootstrap=False,  #0.5922137674706236 
                           #디폴트 , 중복 허용 / False = 중복안허용
                           )
 
@@ -70,8 +78,6 @@ results = model.score(x_test, y_test)
 print("최종 점수 : ", results)
 
 y_predict = model.predict(x_test)
-acc = accuracy_score(y_test, y_predict)
-print("acc_score : ", acc)
 
 ###############################################################
 print("------------------------------------------------------------")
@@ -80,9 +86,6 @@ results = model.score(x_test, y_test)
 print("최종점수 : ", results)
 
 y_predict = model.predict(x_test)
-acc= accuracy_score(y_test,y_predict)
-
-print("acc_score : ",acc)
 
 
 

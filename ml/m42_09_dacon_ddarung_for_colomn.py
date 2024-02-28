@@ -2,16 +2,25 @@ import numpy as np
 from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
-from xgboost import XGBClassifier
+from xgboost import XGBClassifier,XGBRegressor
 from sklearn.metrics import accuracy_score
+import pandas as pd
 import warnings
 
 warnings.filterwarnings('ignore')
 
 # 1. 데이터
-x, y = load_breast_cancer(return_X_y=True)
+path = "c:\\_data\\dacon\\ddarung\\"
+train_csv=pd.read_csv(path + "train.csv",index_col=0)
+test_csv=pd.read_csv(path + "test.csv",index_col=0)
+submission_csv =pd.read_csv(path +"submission.csv")
+train_csv=train_csv.dropna()
+test_csv=test_csv.fillna(test_csv.mean())
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=777, train_size=0.8)
+x=train_csv.drop(['count'],axis=1)
+y=train_csv['count']
+
+x_train,x_test,y_train,y_test = train_test_split(x,y,random_state=111,train_size=0.8)
 
 scaler = MinMaxScaler()
 x_train = scaler.fit_transform(x_train)
@@ -36,7 +45,7 @@ parameters = {
 
 # 2. 모델
 
-model = XGBClassifier()
+model = XGBRegressor()
 model.set_params(early_stopping_rounds=10, **parameters)
 
 # 3. 훈련
@@ -51,8 +60,6 @@ results = model.score(x_test, y_test)
 print("최종 점수 : ", results)
 
 y_predict = model.predict(x_test)
-acc = accuracy_score(y_test, y_predict)
-print("acc_score : ", acc)
 
 ###############################################################
 print("------------------------------------------------------------")
@@ -75,7 +82,7 @@ for i in range(num_iterations) :
 
     print(x_train.shape, x_test.shape)
     
-    model = XGBClassifier()
+    model = XGBRegressor()
     model.set_params(early_stopping_rounds=10, **parameters)
     
     model.fit(x_train, y_train,
@@ -89,8 +96,5 @@ for i in range(num_iterations) :
     # print("최종 점수 : ", results)
 
     y_predict = model.predict(x_test)
-    acc = accuracy_score(y_test, y_predict)
-    # print("acc_score : ", acc)
-    print(f"acc : {acc}")
     print(f"제거된 특성 {min_importance_index}의 중요도 : {min_importance}")
     print("-----------------------------------------------------------------------")

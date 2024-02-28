@@ -7,12 +7,36 @@ from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier,BaggingClassifier, VotingClassifier, StackingClassifier
 from sklearn.linear_model import LogisticRegression
 from catboost import CatBoostClassifier
+import pandas as pd
 import warnings
 warnings.filterwarnings('ignore')
 
 # 1. 데이터
-x, y = load_breast_cancer(return_X_y=True)
+path = "C:\\_data\\dacon\\dechul\\"
+train_csv = pd.read_csv(path + "train.csv", index_col=0 )
+print(train_csv.shape)  
+test_csv = pd.read_csv(path + "test.csv", index_col=0 )
+print(test_csv.shape) 
+submission_csv = pd.read_csv(path + "sample_submission.csv")
+print(submission_csv.shape)  
+train_csv = train_csv[train_csv['주택소유상태'] != 'ANY']
+test_csv.loc[test_csv['대출목적'] == '결혼' , '대출목적'] = '기타'
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+le = LabelEncoder()
+train_csv['주택소유상태'] = le.fit_transform(train_csv['주택소유상태'])
+train_csv['대출목적'] = le.fit_transform(train_csv['대출목적'])
+train_csv['대출기간'] = train_csv['대출기간'].str.slice(start=0,stop=3).astype(int)
+train_csv['근로기간'] = le.fit_transform(train_csv['근로기간'])
 
+test_csv['주택소유상태'] = le.fit_transform(test_csv['주택소유상태'])
+test_csv['대출목적'] = le.fit_transform(test_csv['대출목적'])
+test_csv['대출기간'] = test_csv['대출기간'].str.slice(start=0,stop=3).astype(int)
+test_csv['근로기간'] = le.fit_transform(test_csv['근로기간'])
+
+train_csv['대출등급'] = le.fit_transform(train_csv['대출등급'])
+
+x = train_csv.drop(['대출등급'], axis=1)
+y = train_csv['대출등급']
 x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=777, train_size=0.8,stratify=y)
 
 scaler = MinMaxScaler()
@@ -82,3 +106,6 @@ model.fit(x_train,y_train)
 y_predict = model.predict(x_test)
 print('model.score :',model.score(x_test,y_test))
 print('Stacking acc :', accuracy_score(y_test,y_predict))
+
+# model.score : 0.8528999428838465
+# Stacking acc : 0.8528999428838465

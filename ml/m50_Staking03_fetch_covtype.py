@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.datasets import load_breast_cancer
+from sklearn.datasets import fetch_covtype
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from xgboost import XGBClassifier
@@ -11,7 +11,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # 1. 데이터
-x, y = load_breast_cancer(return_X_y=True)
+x, y = fetch_covtype(return_X_y=True)
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=777, train_size=0.8,stratify=y)
 

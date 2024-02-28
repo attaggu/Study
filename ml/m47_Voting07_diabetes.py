@@ -2,10 +2,12 @@ import numpy as np
 from sklearn.datasets import load_diabetes
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
-from xgboost import XGBClassifier
+from xgboost import XGBClassifier, XGBRegressor
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier,BaggingClassifier,RandomForestRegressor,BaggingRegressor, VotingClassifier
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestRegressor,BaggingRegressor,VotingRegressor
+
+from sklearn.linear_model import LinearRegression
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -47,15 +49,15 @@ parameters = {
 #                           #디폴트 , 중복 허용 / False = 중복안허용
 #                           )
 
-xgb = XGBClassifier()
-rf = RandomForestClassifier()
-lr = LogisticRegression()
+xgb = XGBRegressor()
+rf = RandomForestRegressor()
+lr = LinearRegression()
 
-model = VotingClassifier(
+model =VotingRegressor(
     estimators=[('LR', lr), ('RF', rf), ('XGB', xgb )],
-    voting='soft',
+    # voting='soft',
     # voting='hard',    #디폴트
-    ) #acc_score :  0.9649122807017544
+    ) #최종 점수 :  0.4442921452539821
 # 3. 훈련
 model.fit(x_train, y_train,
         #   eval_set=[(x_train, y_train), (x_test, y_test)],
@@ -68,9 +70,6 @@ results = model.score(x_test, y_test)
 print("최종 점수 : ", results)
 
 y_predict = model.predict(x_test)
-# acc = accuracy_score(y_test, y_predict)
-# print("acc_score : ", acc)
-
 ###############################################################
 print("------------------------------------------------------------")
 

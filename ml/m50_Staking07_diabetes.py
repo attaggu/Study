@@ -83,3 +83,4 @@ model.fit(x_train,y_train)
 y_predict = model.predict(x_test)
 print('model.score :',model.score(x_test,y_test))
 # print('Stacking acc :', accuracy_score(y_test,y_predict))
+# model.score : 0.4522361798305452
