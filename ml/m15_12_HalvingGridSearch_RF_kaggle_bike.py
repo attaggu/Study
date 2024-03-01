@@ -18,6 +18,7 @@ train_csv=pd.read_csv(path+"train.csv",index_col=0)
 test_csv=pd.read_csv(path+"test.csv",index_col=0)
 submission_csv=pd.read_csv(path+"sampleSubmission.csv")
 
+
 train_csv=train_csv.dropna()
 test_csv=test_csv.fillna(test_csv.mean())
 
