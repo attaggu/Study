@@ -20,7 +20,8 @@ vgg16=VGG16(
     )
 
 vgg16.trainable = False # 훈련을 안함 - 가중치 동결
-
+# 난 정말 
+# 렐루
 model = Sequential()
 model.add(vgg16)
 model.add(Flatten())
@@ -28,6 +29,7 @@ model.add(Dense(100))
 model.add(Dense(100))
 model.add(Dense(10, activation='softmax'))
 model.summary()
+
 
 
 end_time=time.time()
