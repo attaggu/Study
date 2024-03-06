@@ -77,7 +77,7 @@ for i in thresholds:
     select_model.set_params(
     early_stopping_rounds=10,
     **parameters,
-    evla_metric='logloss',
+    eval_metric='logloss',
     )
     select_model.fit(select_x_train,y_train,
                  eval_set=[(select_x_train,y_train),(select_x_test,y_test)],
@@ -89,4 +89,4 @@ for i in thresholds:
     print("Trech=%.3f, n=%d, ACC: %.2f%%" %(i, select_x_train.shape[1], score*100))
     
 
-    
+     

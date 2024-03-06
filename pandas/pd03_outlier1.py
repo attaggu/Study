@@ -4,12 +4,6 @@ aaa = np.array([-10,2,3,4,5,6,7,8,9,10,11,12,50])
 
 
 
-
-
-
-
-
-
 def outliers(data_out):
     quartile_1, q2, quartile_3 = np.percentile(data_out,[25,50,75]) 
     #25 - quartile_1 -1사분위
