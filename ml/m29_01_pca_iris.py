@@ -41,6 +41,7 @@ evr= pca.explained_variance_ratio_  #변화율
 print(evr)
 print(sum(evr))
 
+
 evr_cumsum=np.cumsum(evr)   #변화율합이 나오고 나온값을 보고 변화율이 적으면서 압축이 많이 되는 지점을 찾을수있음
 print(evr_cumsum)  
 

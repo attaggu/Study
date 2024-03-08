@@ -14,6 +14,8 @@ import matplotlib.pyplot as plt
 
 # 1. Data
 
+
+
 datasets=load_iris()
 x=datasets.data
 y=datasets['target']
