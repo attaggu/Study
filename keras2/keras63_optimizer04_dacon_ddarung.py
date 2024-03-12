@@ -45,6 +45,6 @@ loss=model.evaluate(x_test, y_test)
 y_predict=np.round(model.predict(x_test))
 r2=r2_score(y_test,y_predict)
 print("lr : {0}, loss : {1}".format(learning_rate,loss))
-print("lr : {0}, loss : {1}".format(learning_rate, r2))
+print("lr : {0}, acc : {1}".format(learning_rate, r2))
 
 

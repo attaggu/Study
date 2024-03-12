@@ -74,12 +74,11 @@ hist=model.fit(x_train,y_train, epochs=1000, batch_size=50,
           callbacks=[es,mcp,rlr],
           )
 
-
 loss = model.evaluate(x_test,y_test,verbose=0)
 y_predict=model.predict(x_test,verbose=0)
 r2 = r2_score(y_predict,y_test)
 print("lr : {0}, loss : {1}".format(lr,loss))
-print("lr : {0}, loss : {1}".format(lr, r2))
+print("lr : {0}, acc : {1}".format(lr, r2))
 
 print("====================================")
 # print(hist.history['val_loss'])

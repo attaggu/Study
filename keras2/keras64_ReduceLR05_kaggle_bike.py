@@ -83,7 +83,7 @@ submission_csv.to_csv(path + "sampleSubmission_0108.csv", index=False)
 y_predict=model.predict(x_test)
 r2=r2_score(y_test,y_predict)
 print("lr : {0}, loss : {1}".format(lr,loss))
-print("lr : {0}, loss : {1}".format(lr, r2))
+print("lr : {0}, acc : {1}".format(lr, r2))
 
 
 print("양의갯수:",submission_csv[submission_csv['count']>0].count())
