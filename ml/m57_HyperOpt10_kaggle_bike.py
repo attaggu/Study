@@ -1,6 +1,6 @@
 
 import numpy as np
-from sklearn.datasets import load_breast_cancer
+from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from xgboost import XGBClassifier, XGBRegressor
@@ -13,19 +13,32 @@ from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression,LogisticRegression
 from bayes_opt import BayesianOptimization
 import warnings
+from hyperopt import hp, fmin, tpe, Trials, STATUS_OK
+import pandas as pd
 warnings.filterwarnings('ignore')
 import time
-from hyperopt import hp, fmin, tpe, Trials, STATUS_OK
 # 1. 데이터
-x, y = load_breast_cancer(return_X_y=True)
+
+path = "c://_data//kaggle//bike//"
+train_csv=pd.read_csv(path+"train.csv",index_col=0)
+test_csv=pd.read_csv(path+"test.csv",index_col=0)
+submission_csv=pd.read_csv(path+"sampleSubmission.csv")
+
+train_csv=train_csv.dropna()
+test_csv=test_csv.fillna(test_csv.mean())
+
+x=train_csv.drop(['count','casual','registered'],axis=1)
+y=train_csv['count']
+# pf = PolynomialFeatures(degree=2, include_bias=False)
+# x_poly = pf.fit_transform(x)
 
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=777, train_size=0.8,stratify=y)
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=777, train_size=0.8)
 
 scaler = MinMaxScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
-
 
 
 search_space = {
@@ -56,7 +69,8 @@ def xgb_hamsu(search_space):
         'reg_alpha' : search_space['reg_alpha'],
     
     }
-    model = XGBClassifier(**params, n_jobs =-1)
+    
+    model = XGBRegressor(**params, n_jobs =-1)
     model.fit(x_train,y_train,
               eval_set=[(x_train,y_train),(x_test,y_test)],
               eval_metric='logloss',
@@ -64,10 +78,9 @@ def xgb_hamsu(search_space):
               early_stopping_rounds=50,
               )
     y_predict=model.predict(x_test)
-    result = accuracy_score(y_test,y_predict)
+    result = model.score(x_test,y_test)
+    
     return result
-
-
 
 trial_val = Trials()
 n_iter= 100
@@ -85,4 +98,5 @@ end_time = time.time()
 
 print('best:',best)
 print(n_iter, '번 걸린시간 :', round(end_time-start_time,2),'초')
+
 

@@ -1,6 +1,6 @@
 
 import numpy as np
-from sklearn.datasets import load_breast_cancer
+from sklearn.datasets import fetch_covtype
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from xgboost import XGBClassifier, XGBRegressor
@@ -13,18 +13,31 @@ from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression,LogisticRegression
 from bayes_opt import BayesianOptimization
 import warnings
+from hyperopt import hp, fmin, tpe, Trials, STATUS_OK
+import pandas as pd
 warnings.filterwarnings('ignore')
 import time
-from hyperopt import hp, fmin, tpe, Trials, STATUS_OK
 # 1. 데이터
-x, y = load_breast_cancer(return_X_y=True)
+
+path = "c://_data//dacon//wine//"
+
+train_csv = pd.read_csv(path + "train.csv", index_col=0)
+test_csv = pd.read_csv(path + "test.csv",index_col=0)
+
+submission_csv=pd.read_csv(path + "sample_submission.csv")
+
+train_csv['type']=train_csv['type'].map({'white':1,'red':0}).astype(int)
+test_csv['type']=test_csv['type'].map({'white':1,'red':0}).astype(int)
 
 
+x=train_csv.drop(['quality'],axis=1)
+y=train_csv['quality']-3
 x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=777, train_size=0.8,stratify=y)
 
 scaler = MinMaxScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
+
 
 
 
@@ -59,15 +72,14 @@ def xgb_hamsu(search_space):
     model = XGBClassifier(**params, n_jobs =-1)
     model.fit(x_train,y_train,
               eval_set=[(x_train,y_train),(x_test,y_test)],
-              eval_metric='logloss',
+              eval_metric='mlogloss',
               verbose=0,
               early_stopping_rounds=50,
               )
     y_predict=model.predict(x_test)
     result = accuracy_score(y_test,y_predict)
+    
     return result
-
-
 
 trial_val = Trials()
 n_iter= 100
@@ -85,4 +97,3 @@ end_time = time.time()
 
 print('best:',best)
 print(n_iter, '번 걸린시간 :', round(end_time-start_time,2),'초')
-
