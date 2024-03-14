@@ -103,3 +103,20 @@ print("loss:",result[0])
 print("acc:",result[1])
 
 '''
+
+xy_train = train_datagan.flow_from_directory(path_train,
+                                             shuffle=True , 
+                                             class_mode='categorical',
+                                             color_mode= 'rgb',
+                                             target_size=(300,300),                                             
+                                             batch_size= 30)
+
+x= []
+y= []
+for i in range(len(xy_train)) : 
+    a , b = xy_train.next()
+    x.append(a)
+    y.append(b)
+
+x = np.concatenate(x, axis= 0)
+y = np.concatenate(y, axis= 0)
