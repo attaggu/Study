@@ -56,3 +56,14 @@ print(xy_train[0][0])   #첫번째 배치의 x
 # print(type(xy_train[0]))
 # print(type(xy_train[0][0])) #0의 0번째=x
 # print(type(xy_train[0][1])) #0의 1번째=y
+
+# 통 batch가 아닐때
+x= []
+y= []
+for i in range(len(xy_train)) : 
+    a , b = xy_train.next()
+    x.append(a)
+    y.append(b)
+
+x = np.concatenate(x, axis= 0)
+y = np.concatenate(y, axis= 0)
