@@ -77,7 +77,7 @@ model.add(Embedding(input_dim=27,output_dim=10,input_length=5))
 # model.add(Embedding(27,10)) = 같다    input_dim , output_dim  적용   
 #input_dim => 국어사전 개수+1
 #output_dim => units
-#input_length => (15,5)가 들어와서 행무시해서 5개(패딩 적용된 데이터 길이) = 연산에 의마 X, 자동으로 알아서 적용
+#input_length => (15,5)가 들어와서 행무시해서 5개(패딩 적용된 데이터 길이) = 연산에 의미 X, 자동으로 알아서 적용
 #embedding 인풋의 shape = 2차원 / embedding 아웃풋의 shape = 3차원
 #input_dim => 적으면 그수만큼 단어를 잘라서 훈련 / 많으면 임의 단어를 추가(증폭)해서 훈련 - but 증폭했지만 오히려 성능이 떨어질수 있음
 #=========================
