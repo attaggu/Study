@@ -58,7 +58,6 @@ filename= '{epoch:04d}-{val_loss:.4f}.hdf5' #0~9999 : 4자리 숫자까지 에�
 filepath= "".join([path,'k25',date,'_',filename]) # ""는 공간을 만든거고 그안에 join으로 합침 , ' _ ' 중간 공간
 
 
-
 es=EarlyStopping(monitor='val_loss',mode='auto',
                  patience=10,verbose=1,restore_best_weights=True,
                  )

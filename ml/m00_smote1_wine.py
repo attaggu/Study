@@ -29,11 +29,6 @@ print(y)
 print(np.unique(y,return_counts=True))
 #(array([0, 1, 2]), array([59, 71, 18], dtype=int64))
 
-
-print(np.unique(y,return_counts=True))
-
-
-
 #model
 x_train,x_test,y_train,y_test=train_test_split(x,y,train_size=0.75,
                                                shuffle=True,
@@ -80,16 +75,16 @@ print("==============SMOTE=============")
 from imblearn.over_sampling import SMOTE
 
 # import sklearn as sk
-
 # print("scikit:",sk.__version__) # 1.1.3
 
 smote=SMOTE(random_state=123)
 x_train,y_train=smote.fit_resample(x_train,y_train)
 
-print(pd.value_counts(y_train))
+# print(pd.value_counts(y_train))
+print(x_train.shape,y_train.shape)
 
 # smote 증폭 끝
-
+'''
 
 model=Sequential()
 model.add(Dense(10,input_shape=(13,)))
@@ -116,3 +111,5 @@ f1_score=f1_score(y_test,y_predict,average='macro')
 #f1 score 는 이진분류용이다 / macro - 다중분류 각각을 이중분류로 비교해서 n빵함
 print("acc:",acc)
 print("f1:",f1_score)
+
+'''

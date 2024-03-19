@@ -22,6 +22,7 @@ print(pd.value_counts(y))
 # y_ohe=to_categorical(y)
 # print(y_ohe)
 # print(y_ohe.shape)  #(178, 3)
+
 #2.
 # from sklearn.preprocessing import OneHotEncoder
 # y=y.reshape(-1,1)
@@ -29,6 +30,7 @@ print(pd.value_counts(y))
 # y_ohe=ohe.fit_transform(y).toarray()
 # ohe=OneHotEncoder(sparse=False)
 # y_ohe=ohe.fit_transform(y)
+
 #3.
 y_ohe=pd.get_dummies(y)
 

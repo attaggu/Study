@@ -33,11 +33,10 @@ x_train,x_test,y_train,y_test = train_test_split(x,y,
 model = Sequential()
 model.add(Dense(16, input_dim=13))
 model.add(Dense(32))
-model.add(Dropout(0.2)) #20프로만 버린다 / 기본값=
+model.add(Dropout()) #20프로만 버린다 
 model.add(Dense(16))
 model.add(Dense(8))
 model.add(Dense(1))
-
 
 
 import datetime
