@@ -72,6 +72,7 @@ print(y_submit)
 print(y_submit.shape)
 
 # y_submit[y_submit<0]=0 #----음수를 전부 0으로 표시
+# 음수 값을 결측치로 바꾸는법 = y_submit[y_submit<0]=np.NaN
 # y_submit=abs(y_submit) ----절대값으로 변경(데이터가 정확하지 않음)
 
 submission_csv['count']=y_submit
@@ -88,7 +89,7 @@ print("R2_score:",r2)
 print("음수갯수:",submission_csv[submission_csv['count']<0].count())    ###중요###
 #4. evaluate, predict  6291,202 / 6493,0 / 6289,0
 
-
+#y_submit=abs(y_submit) - 절대값 주기
 
 
 def RMSE(y_test,y_predict):
