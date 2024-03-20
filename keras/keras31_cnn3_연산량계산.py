@@ -16,6 +16,7 @@ print(np.unique(y_train,return_counts=True))    #(array([0, 1, 2, 3, 4, 5, 6, 7,
 #3차원 4차원으로 변경
 x_train=x_train.reshape(60000,28,28,1)  #data 내용,순서 안바뀌면 reshape 가능
 
+
 # x_test=x_test.reshape(10000,28,28,1)  #아래와 같다 - 값을 모를때 적용
 x_test=x_test.reshape(x_test.shape[0],x_test.shape[1],x_test.shape[2],1)
 print(x_train.shape[0]) #60000
