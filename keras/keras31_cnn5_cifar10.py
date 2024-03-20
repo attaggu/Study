@@ -26,8 +26,8 @@ y_test=ohe.fit_transform(y_test)
 # y_test=y_test.reshape(-1,1)
 # y_train=ohe.fit_transform(y_train)
 # y_test=ohe.fit_transform(y_test)
-x_train=x_train/255
-x_test=x_test/255
+x_train=x_train/255.
+x_test=x_test/255.
 import datetime
 date=datetime.datetime.now()
 print(date) #2024-01-17 10:54:36.094603 - 

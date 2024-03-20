@@ -35,6 +35,7 @@ model.add(Conv2D(8, (2,2),
                  padding='same',    #전 사이즈를 그대로 유지
                 #  padding='valid',   #디폴트
                  input_shape=(10,10,1)))
+
 #(10,10,8)
 model.add(MaxPooling2D())   #n빵
 #(5,5,8)로 바뀜

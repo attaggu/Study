@@ -31,8 +31,8 @@ print(x_train.shape,x_test.shape)  #(60000, 28, 28, 1) (10000, 28, 28, 1)
 #2.model
 model = Sequential()
 model.add(Conv2D(9, (2,2),strides=3,
-                #  padding='same',    #전 사이즈를 그대로 유지
-                #  padding='valid',   #디폴트
+                #  padding='same',    #전 사이즈를 그대로 유지 - 패딩 생성
+                #  padding='valid',   #디폴트 - 그냥 평소 작업 진행
                  input_shape=(7,7,1)))
 
 
