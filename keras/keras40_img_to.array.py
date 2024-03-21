@@ -6,12 +6,14 @@ print("py version:",sys.version)    #py version: 3.9.18
 import matplotlib.pyplot as plt
 from keras.preprocessing.image import ImageDataGenerator    #image를 불러와서 수치화
 
+
 from tensorflow.keras.preprocessing.image import load_img #image를 불러옴
 from tensorflow.keras.preprocessing.image import img_to_array #image를 수치화
 
+
 path='c:/_data/image/animal/train/Cat//1.jpg'
 img=load_img(path,
-            #    target_size=(150,150),
+               target_size=(150,150),
                )
 print(img)
 

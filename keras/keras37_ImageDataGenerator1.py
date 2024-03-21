@@ -19,7 +19,7 @@ test_datagen=ImageDataGenerator(rescale=1./255)   #train 데이터로만 훈련�
 
 path_train = "c://_data//image//brain//train//"
 path_test = "c://_data//image//brain//test//"
-
+ 
 xy_train=train_datagen.flow_from_directory(
     path_train,
     target_size=(200,200),  #사이즈를 맞춰 늘리거나 줄임

@@ -73,6 +73,7 @@ print("time",round(end_time-start_time,2),"초")
 import pandas as pd
 print(pd.DataFrame(model.cv_results_).T)
 
+
 # _iterations: 3
 # n_required_iterations: 6
 # n_possible_iterations: 3

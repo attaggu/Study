@@ -73,7 +73,7 @@ es=EarlyStopping(monitor='val_loss',mode='auto',patience=100,
                  restore_best_weights=True)
 model.compile(loss='binary_crossentropy',optimizer='adam',
               metrics=['acc'])
-# model.fit_generator(xy_train, #업데이트가 돼서 fit이랑 fit_generator 둘 다 똑같이 가능
+# model.fit_generator(xy_train) #업데이트가 돼서 fit이랑 fit_generator 둘 다 똑같이 가능 - evaluate, predict 둘다 포함
 model.fit(xy_train, # x와 y를 안나눴을때 그냥 계산 적용 가능/ 배치사이즈를 위에서 줘야한다
                     # batch_size=15,    #적용이 안되고 위에있는 배치사이즈가 적용됨
                     steps_per_epoch=13,  #전체데이터 / batch = 160/10(위에서 적용한 배치값) = 16(디폴트) 
