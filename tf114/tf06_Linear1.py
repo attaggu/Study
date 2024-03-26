@@ -28,8 +28,8 @@ sess.run(tf.global_variables_initializer())
 # 3-3. model.fit
 epochs = 10000
 for step in range(epochs):
-    sess.run(train) # 핵심
-    if step % 20 == 0:  # epochs 20마다 보여줌 
+    sess.run(train) # 핵심 - 1 epoch
+    if step % 20 == 0:  # epochs 20마다 보여줌 - 너무 많이 떠서 = verbose
         print(step, sess.run(loss), sess.run(w), sess.run(b))
         # verbose 와 model.weight 에서 확인가능한 값들
     
