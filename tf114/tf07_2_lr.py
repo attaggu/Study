@@ -10,10 +10,7 @@ w = tf.Variable(tf.random_normal([1]), dtype=tf.float32)
 b = tf.Variable(tf.random_normal([1]), dtype=tf.float32) 
 
 
-
-
 hypothesis = x * w + b
-
 
 
 loss = tf.reduce_mean(tf.square(hypothesis - y))    # mse
