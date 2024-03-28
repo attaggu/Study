@@ -5,16 +5,15 @@ from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error,r2_score
 x,y = fetch_california_housing(return_X_y=True)
-
 print(x.shape, y.shape) # (20640, 8) (20640,)
-'''
+
 x_train, x_test, y_train, y_test = train_test_split(x,y,train_size=0.8, shuffle=True, random_state=123)
 y_train = y_train.reshape(-1,1)
 y_test = y_test.reshape(-1,1)
-xp = tf.compat.v1.placeholder(tf.float32,shape=[None,10])
+xp = tf.compat.v1.placeholder(tf.float32,shape=[None,8])
 yp = tf.compat.v1.placeholder(tf.float32,shape=[None,1])
 
-w = tf.compat.v1.Variable(tf.compat.v1.random_normal([10,1], dtype=tf.float32,name='weights'))
+w = tf.compat.v1.Variable(tf.compat.v1.random_normal([8,1], dtype=tf.float32,name='weights'))
 b = tf.compat.v1.Variable(tf.compat.v1.zeros([1], dtype=tf.float32,name='bias'))
 
 hypothesis = tf.compat.v1.matmul(xp, w) + b
@@ -39,4 +38,3 @@ r2 = r2_score(y_test, predict)
 print("R2:", r2)
         
 sess.close()
-'''
