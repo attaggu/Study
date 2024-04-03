@@ -1,7 +1,7 @@
 from sklearn.datasets import load_breast_cancer
 import tensorflow as tf
 tf.compat.v1.set_random_seed(123)
-from sklearn.preprocessing import StandardScaler
+# dropout은 노드를 줄여주는데 predict를 할때는 dropout 없이 노드를 전부 계산해야한다
 
 # data
 datasets = load_breast_cancer()
@@ -9,8 +9,7 @@ datasets = load_breast_cancer()
 x_data,y_data = datasets.data, datasets.target
 
 print(x_data.shape, y_data.shape)   #(569, 30) (569,)
-scaler = StandardScaler()
-x_data = scaler.fit_transform(x_data)
+
 y_data = y_data.reshape(-1,1)
 
 x = tf.compat.v1.placeholder(tf.float32, shape=[None,30])
@@ -24,6 +23,7 @@ layer1 = tf.compat.v1.matmul(x, w1) + b1        #(N,10)
 w2 = tf.compat.v1.Variable(tf.random_normal([10,9], name='weight2')) # (n,10) 에 (10,9)를 곱해 (n,9)
 b2 = tf.compat.v1.Variable(tf.zeros([9], name='bias'))
 layer2 = tf.compat.v1.matmul(layer1,w2) + b2    #(N, 9)
+layer2 = tf.compat.v1.nn.dropout(layer2, keep_prob=0.5)
 
 # layer3 : model.add(Dense(8))
 w3 = tf.compat.v1.Variable(tf.random_normal([9,8], name='weight3')) # (n,9) 에 (9,8)를 곱해 (n,8)

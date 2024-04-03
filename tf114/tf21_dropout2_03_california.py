@@ -13,6 +13,8 @@ y_test = y_test.reshape(-1,1)
 scaler = StandardScaler()
 x_train= scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
+keep_prob = tf.compat.v1.placeholder(tf.float32)
+
 xp = tf.compat.v1.placeholder(tf.float32,shape=[None,8])
 yp = tf.compat.v1.placeholder(tf.float32,shape=[None,1])
 
@@ -20,16 +22,19 @@ yp = tf.compat.v1.placeholder(tf.float32,shape=[None,1])
 w1 = tf.compat.v1.Variable(tf.random_normal([8,10], name='weight1')) # (n,10) = (n,2)에 * (2,10)이 곱해져야 나옴
 b1 = tf.compat.v1.Variable(tf.zeros([10], name='bias'))
 layer1 = tf.compat.v1.matmul(xp, w1) + b1        #(N,10)
+layer1 = tf.compat.v1.nn.dropout(layer1, keep_prob)
 
 # layer2 : model.add(Dense(9))
 w2 = tf.compat.v1.Variable(tf.random_normal([10,9], name='weight2')) # (n,10) 에 (10,9)를 곱해 (n,9)
 b2 = tf.compat.v1.Variable(tf.zeros([9], name='bias'))
 layer2 = tf.compat.v1.matmul(layer1,w2) + b2    #(N, 9)
+layer2 = tf.compat.v1.nn.dropout(layer2, keep_prob)
 
 # layer3 : model.add(Dense(8))
 w3 = tf.compat.v1.Variable(tf.random_normal([9,8], name='weight3')) # (n,9) 에 (9,8)를 곱해 (n,8)
 b3 = tf.compat.v1.Variable(tf.zeros([8], name='bias'))
 layer3 = tf.compat.v1.matmul(layer2,w3) + b3    #(N, 8)
+layer3 = tf.compat.v1.nn.dropout(layer3, keep_prob)
 
 # layer4 : model.add(Dense(7))
 w4 = tf.compat.v1.Variable(tf.random_normal([8,7], name='weight4')) # (n,9) 에 (9,8)를 곱해 (n,8)
@@ -52,12 +57,12 @@ sess.run(tf.compat.v1.global_variables_initializer())
 epochs = 15001
 for step in range(epochs):
     cost_val,_ = sess.run([loss,train],
-                          feed_dict={xp:x_train,yp:y_train})
+                          feed_dict={xp:x_train,yp:y_train,keep_prob:0.3})
     if step %100 == 0 :
         print(step, "loss:",cost_val)
         
         from sklearn.metrics import r2_score
-predict = sess.run(hypothesis, feed_dict={xp: x_test})
+predict = sess.run(hypothesis, feed_dict={xp: x_test,keep_prob:1.0})
 r2 = r2_score(y_test, predict)
 print("R2:", r2)
         

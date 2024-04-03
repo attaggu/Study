@@ -1,5 +1,6 @@
 import tensorflow as tf
 tf.compat.v1.set_random_seed(123)
+from sklearn.preprocessing import StandardScaler
 
 from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split
@@ -27,6 +28,10 @@ print(x.shape, y.shape) # (1328, 9) (1328,)
 x_train, x_test, y_train, y_test = train_test_split(x,y,train_size=0.8, shuffle=True, random_state=123)
 y_train = y_train.values.reshape(-1,1)
 y_test = y_test.values.reshape(-1,1)
+scaler = StandardScaler()
+x_train= scaler.fit_transform(x_train)
+x_test = scaler.transform(x_test)
+
 xp = tf.compat.v1.placeholder(tf.float32,shape=[None,9])
 yp = tf.compat.v1.placeholder(tf.float32,shape=[None,1])
 
@@ -55,7 +60,7 @@ b5 = tf.compat.v1.Variable(tf.zeros([1], name='bias'))
 hypothesis = tf.compat.v1.matmul(layer4, w5) + b5   #(N, 1)
 
 loss = tf.reduce_mean(tf.compat.v1.square(hypothesis-yp))
-optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.6)
+optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.006)
 train = optimizer.minimize(loss)
 
 sess = tf.compat.v1.Session()
