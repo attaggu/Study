@@ -71,7 +71,7 @@ train = tf.compat.v1.train.AdamOptimizer(learning_rate=0.0005).minimize(loss)
 sess = tf.compat.v1.Session()
 sess.run(tf.compat.v1.global_variables_initializer())
 
-training_epochs = 101
+training_epochs = 20001
 batch_size = 100
 
 total_batch = int(len(x_train) / batch_size)
@@ -95,6 +95,8 @@ for step in range(training_epochs):
     # i+=1  === i+1 이랑 같음
     if step %20 == 0:
         print(step, "loss : ", avg_cost )
+
+
 
 
 pred = sess.run(hypothesis, feed_dict={x:x_test,keep_prob:1.0})
