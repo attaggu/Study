@@ -22,6 +22,7 @@ def outliers(data_out):
     return np.where((data_out>upper_bound) | (data_out<lower_bound))    # | = or 
 outliers_loc = outliers(aaa)
 
+
 print("이상치의 위치:", outliers_loc)
 import matplotlib.pyplot as plt
 plt.boxplot(aaa)
