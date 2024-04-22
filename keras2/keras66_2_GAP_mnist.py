@@ -54,9 +54,6 @@ model.summary()
 # Total params: 126,260 - Flatten
 # 연산량 차이가 큼
 
-
-
-
 #3.compile,fit
 model.compile(loss='sparse_categorical_crossentropy',optimizer='adam',metrics=['acc'])
 model.fit(x_train,y_train,epochs=20,batch_size=32,verbose=1,validation_split=0.2)
