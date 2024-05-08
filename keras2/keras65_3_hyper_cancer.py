@@ -17,6 +17,7 @@ print(x_train.shape,x_test.shape)
 
 
 
+
 callbacks = [ EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True),
              ModelCheckpoint(filepath='best_model.h5', monitor='val_loss', save_best_only=True)]
 # 2. Model
