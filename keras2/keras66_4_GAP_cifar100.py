@@ -59,5 +59,4 @@ print("acc:",result[1])
 # acc: 0.16869999468326569
 
 # GlobalAvergaePooling
-# loss: 3.3482699394226074
-# acc: 0.1785999983549118
+# loss: 3.348269939422607
