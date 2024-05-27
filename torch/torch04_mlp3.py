@@ -1,19 +1,40 @@
+
+
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 
-#1. 데이터 
-x = np.array([1,2,3])
-y = np.array([1,2,3])
+USE_CUDA = torch.cuda.is_available()
+DEVICE = torch.device('cuda' if USE_CUDA else 'cpu')
+print('torch :', torch.__version__, '사용 DEVICE :', DEVICE)
+# gpu 연산을 하려면 to.(DEVICE) 를 줘서 cuda로 돌리겠다고 정의
 
+
+
+x = np.array([range(10),range(21,31,),range(201,211)])
+
+
+x = np.transpose(x)
+
+
+y = np.array([[1,2,3,4,5,6,7,8,9,10],
+              [1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9],
+              [9,8,7,6,5,4,3,2,1,0]])    #[] <= list ("두개이상은")
+
+print(x.shape, y.shape)
+
+y = np.transpose(y) # (2, 10) -> (10, 2) 
+x = torch.FloatTensor(x).to(DEVICE)  # 이미 2차원이라 unsqueeze 안해도 됨
+y = torch.FloatTensor(y).to(DEVICE)
 # x = torch.FloatTensor(x)
 # y = torch.FloatTensor(y)
 # print(x.shape, y.shape)   torch.Size([3]) torch.Size([3])
+print(x.shape, y.shape)
 
-x = torch.FloatTensor(x).unsqueeze(1)   # (3,) -> (3,1)
-y = torch.FloatTensor(y).unsqueeze(1)   # (3,) -> (3,1)
+# gpu에서 사용할거라고 정의
+
 # print(x.shape, y.shape)     torch.Size([3, 1]) torch.Size([3, 1])
 # print(x, y) #tensor([1., 2., 3.]) tensor([1., 2., 3.])
 # y도 unsqueeze를 줘야함 - 쉐잎이 다르면 n빵 쳐서 계산하게됨
@@ -21,14 +42,23 @@ y = torch.FloatTensor(y).unsqueeze(1)   # (3,) -> (3,1)
 #2. 모델구성
 # model = Sequential()
 # model.add(Dense(1, input_dim=1))
-model = nn.Linear(1, 1) #input, output 케라스랑 반대
+# model = nn.Linear(1, 1).to(DEVICE) #input, output 케라스랑 반대
+model = nn.Sequential(
+    nn.Linear(3, 5),
+    nn.Linear(5, 4),
+    nn.Linear(4, 3),
+    nn.Linear(3, 2),
+    nn.Linear(2, 3),
+).to(DEVICE)
+
+
 
 #3. 컴파일, 훈련
 # model.compile(loss = 'mse', optimizer = 'adam')
 criterion = nn.MSELoss()                #criterion : 표준
 
-# optimizer = optim.Adam(model.parameters(), lr = 0.01)
-optimizer = optim.SGD(model.parameters(), lr = 0.01)
+optimizer = optim.Adam(model.parameters(), lr = 0.01)
+# optimizer = optim.SGD(model.parameters(), lr = 0.01)
 
 # model.fit(x,y, epochs = 100, batch_size=1)
 def train(model, criterion, optimizer, x, y):
@@ -65,8 +95,12 @@ print("최종 loss :", loss2)
 ###### 여기까지 model.evaluate ######
 
 # result = model.predict([4])
-result = model(torch.Tensor([4]))
-print('4의 예측값 :', result.item())
-
-# 최종 loss : 8.146195682456892e-07
-# 4의 예측값 : 4.0018110275268555
+result = model(torch.Tensor([[10, 31, 211]]).to(DEVICE))
+# print('4의 예측값 :', result.item())
+for i, res in enumerate(result[0], start=1):
+    print(f'{i}번째 예측값 :', res.item())
+# item은 하나만 뽑아줘서 각각 따로 뽑는걸 정의해줘야함 
+# 최종 loss : 2.0253429196346456e-13
+# 1번째 예측값 : 11.0
+# 2번째 예측값 : 2.0
+# 3번째 예측값 : -1.0000005960464478

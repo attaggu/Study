@@ -4,6 +4,11 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 
+USE_CUDA = torch.cuda.is_available()
+DEVICE = torch.device('cuda' if USE_CUDA else 'cpu')
+print('torch :', torch.__version__, '사용 DEVICE :', DEVICE)
+# gpu 연산을 하려면 to.(DEVICE) 를 줘서 cuda로 돌리겠다고 정의
+
 #1. 데이터 
 x = np.array([1,2,3])
 y = np.array([1,2,3])
@@ -12,8 +17,10 @@ y = np.array([1,2,3])
 # y = torch.FloatTensor(y)
 # print(x.shape, y.shape)   torch.Size([3]) torch.Size([3])
 
-x = torch.FloatTensor(x).unsqueeze(1)   # (3,) -> (3,1)
-y = torch.FloatTensor(y).unsqueeze(1)   # (3,) -> (3,1)
+x = torch.FloatTensor(x).unsqueeze(1).to(DEVICE)
+y = torch.FloatTensor(y).unsqueeze(1).to(DEVICE)
+# gpu에서 사용할거라고 정의
+
 # print(x.shape, y.shape)     torch.Size([3, 1]) torch.Size([3, 1])
 # print(x, y) #tensor([1., 2., 3.]) tensor([1., 2., 3.])
 # y도 unsqueeze를 줘야함 - 쉐잎이 다르면 n빵 쳐서 계산하게됨
@@ -21,7 +28,17 @@ y = torch.FloatTensor(y).unsqueeze(1)   # (3,) -> (3,1)
 #2. 모델구성
 # model = Sequential()
 # model.add(Dense(1, input_dim=1))
-model = nn.Linear(1, 1) #input, output 케라스랑 반대
+# model = nn.Linear(1, 1).to(DEVICE) #input, output 케라스랑 반대
+#############################
+model = nn.Sequential(
+    nn.Linear(1, 5),
+    nn.Linear(5, 4),
+    nn.Linear(4, 3),
+    nn.Linear(3, 2),
+    nn.Linear(2, 1),
+).to(DEVICE)
+#############################
+
 
 #3. 컴파일, 훈련
 # model.compile(loss = 'mse', optimizer = 'adam')
@@ -65,7 +82,7 @@ print("최종 loss :", loss2)
 ###### 여기까지 model.evaluate ######
 
 # result = model.predict([4])
-result = model(torch.Tensor([4]))
+result = model(torch.Tensor([[4]]).to(DEVICE))
 print('4의 예측값 :', result.item())
 
 # 최종 loss : 8.146195682456892e-07
