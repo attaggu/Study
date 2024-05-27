@@ -28,7 +28,7 @@ model.add(Dense(11))
 model.add(Dense(1))
 
 model.compile(loss='mae', optimizer='adam')
-model.fit(x_train,y_train, epochs=1000, batch_size=100,
+model.fit(x_train,y_train, epochs=100, batch_size=100,
           validation_split=0.3,verbose=1)
 loss=model.evaluate(x_test, y_test)
 y_submit = model.predict(test_csv)

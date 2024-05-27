@@ -30,9 +30,7 @@ x_test = torch.FloatTensor(x_test).to(DEVICE)
 y_train = torch.FloatTensor(y_train).unsqueeze(1).to(DEVICE)
 y_test = torch.FloatTensor(y_test).unsqueeze(1).to(DEVICE)
 
-
 print(x_train.shape,x_test.shape)
-
 
 # gpu에서 사용할거라고 정의
 
@@ -75,7 +73,7 @@ def train(model, criterion, optimizer, x_train, y_train):
     optimizer.zero_grad()
     # w = w - lr * (loss를 weight로 미분한 값)
     hypothesis = model(x_train) #예상치 값 (순전파)   y_predict
-    loss = criterion(y_train, hypothesis) #예상값과 실제값 loss   predict, y 비교 
+    loss = criterion(hypothesis,y_train) #예상값과 실제값 loss   predict, y 비교 
     
     #역전파
     loss.backward() #기울기(gradient)값 계산 (loss를 weight로 미분한 값)    역전파 시작
