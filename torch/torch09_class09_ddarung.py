@@ -18,14 +18,11 @@ test_csv = pd.read_csv(path + "test.csv", index_col=0)
 submission_csv = pd.read_csv(path + "submission.csv")
 
 # 결측치 처리
-train_csv = train_csv.dropna()
+train_csv = train_csv.fillna(test_csv.mean())
 test_csv = test_csv.fillna(test_csv.mean())
 
-# x = train_csv.drop(['count','casual','registered'],axis=1)
-x = train_csv.drop(['count'],axis=1)
-
+x = train_csv.drop(['count'], axis=1)
 y = train_csv['count']
-
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, random_state=121)
 
 scaler = StandardScaler()
@@ -34,6 +31,7 @@ x_test = scaler.transform(x_test)
 
 print(x_train.shape, y_train.shape)  # (1167, 9) (1167,)
 print(x_test.shape, y_test.shape)    # (292, 9) (292,)
+
 x_train = torch.FloatTensor(x_train).to(DEVICE)
 x_test = torch.FloatTensor(x_test).to(DEVICE)
 y_train = torch.FloatTensor(y_train.to_numpy()).unsqueeze(1).to(DEVICE)
@@ -43,32 +41,53 @@ print(x_train.shape, y_train.shape)
 # torch.Size([1167, 9]) torch.Size([1167, 1])
 print(x_test.shape, y_test.shape)
 # torch.Size([292, 9]) torch.Size([292, 1])
+
 # 2. 모델구성
-model = nn.Sequential(
-    nn.Linear(9, 32),
-    nn.ReLU(),
-    nn.Linear(32, 32),
-    nn.ReLU(),
-    nn.Linear(32, 16),
-    nn.ReLU(),
-    nn.Linear(16, 8),
-    nn.Linear(8, 8),
-    nn.ReLU(),
-    nn.Linear(8, 8),
-    nn.ReLU(),
-    nn.Linear(8, 1)
-).to(DEVICE)
+# model = nn.Sequential(
+#     nn.Linear(9, 32),
+#     nn.ReLU(),
+#     nn.Linear(32, 32),
+#     nn.ReLU(),
+#     nn.Linear(32, 16),
+#     nn.ReLU(),
+#     nn.Linear(16, 8),
+#     nn.Linear(8, 8),
+#     nn.ReLU(),
+#     nn.Linear(8, 8),
+#     nn.ReLU(),
+#     nn.Linear(8, 1)
+# ).to(DEVICE)
+
+class Model(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super(Model, self).__init__()
+        self.linear1 = nn.Linear(input_dim,32)
+        self.linear2 = nn.Linear(32,16)
+        self.linear3 = nn.Linear(16,8)
+        self.linear4 = nn.Linear(8,8)
+        self.linear5 = nn.Linear(8,output_dim)
+        
+    def forward(self, input_size):
+        x = self.linear1(input_size)
+        x = self.linear2(x)
+        x = self.linear3(x)
+        x = self.linear4(x)
+        x = self.linear5(x)
+        return x
+model = Model(9,1).to(DEVICE)
+
+
 
 # 3. 컴파일, 훈련
 criterion = nn.MSELoss()
-optimizer = optim.Adam(model.parameters(), lr=0.08)
+optimizer = optim.Adam(model.parameters(), lr=0.01)
 
 # 모델 학습 함수
 def train(model, criterion, optimizer, x_train, y_train):
     model.train()
     optimizer.zero_grad()
     hypothesis = model(x_train)
-    loss = criterion( hypothesis,y_train)
+    loss = criterion(hypothesis,y_train)
     loss.backward()
     optimizer.step()
     return loss.item()
@@ -85,7 +104,7 @@ def evaluate(model, criterion, x_test, y_test):
     model.eval()
     with torch.no_grad():
         y_predict = model(x_test)
-        loss = criterion(y_predict,y_test)
+        loss = criterion(y_test, y_predict)
     return loss.item(), y_predict
 
 # 모델 평가

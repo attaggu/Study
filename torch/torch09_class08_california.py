@@ -44,17 +44,35 @@ print(x_test.shape,y_test.shape)
 # y도 unsqueeze를 줘야함 - 쉐잎이 다르면 n빵 쳐서 계산하게됨
 
 #2. 모델구성
-# model = Sequential()
-# model.add(Dense(1, input_dim=1))
-# model = nn.Linear(1, 1).to(DEVICE) #input, output 케라스랑 반대
+
 #############################
-model = nn.Sequential(
-    nn.Linear(8, 5),
-    nn.Linear(5, 4),
-    nn.Linear(4, 3),
-    nn.Linear(3, 2),
-    nn.Linear(2, 1),
-).to(DEVICE)
+# model = nn.Sequential(
+#     nn.Linear(8, 5),
+#     nn.Linear(5, 4),
+#     nn.Linear(4, 3),
+#     nn.Linear(3, 2),
+#     nn.Linear(2, 1),
+# ).to(DEVICE)
+
+class Model(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super(Model, self).__init__()
+        self.linear1 = nn.Linear(input_dim,5)
+        self.linear2 = nn.Linear(5,4)
+        self.linear3 = nn.Linear(4,3)
+        self.linear4 = nn.Linear(3,2)
+        self.linear5 = nn.Linear(2,output_dim)
+        
+    def forward(self, input_size):
+        x = self.linear1(input_size)
+        x = self.linear2(x)
+        x = self.linear3(x)
+        x = self.linear4(x)
+        x = self.linear5(x)
+        return x
+model = Model(8,1).to(DEVICE)
+
+
 #############################
 
 
@@ -73,7 +91,7 @@ def train(model, criterion, optimizer, x_train, y_train):
     optimizer.zero_grad()
     # w = w - lr * (loss를 weight로 미분한 값)
     hypothesis = model(x_train) #예상치 값 (순전파)   y_predict
-    loss = criterion(hypothesis,y_train) #예상값과 실제값 loss   predict, y 비교 
+    loss = criterion(hypothesis, y_train) #예상값과 실제값 loss   predict, y 비교 
     
     #역전파
     loss.backward() #기울기(gradient)값 계산 (loss를 weight로 미분한 값)    역전파 시작
@@ -93,7 +111,7 @@ def evaluate(model, criterion, x_test, y_test ):
     model.eval()    # 평가 모드 - 훈련때는 괜찮은데 평가때 dropout등 다 적용 안된채로 평가해야된다
     with torch.no_grad():
         y_predict = model(x_test)
-        loss2 = criterion(y_predict,y_test)
+        loss2 = criterion(y_test,y_predict)
     return loss2.item(),y_predict # 평가 loss
 
 loss2,y_pred = evaluate(model, criterion, x_test, y_test)

@@ -44,21 +44,37 @@ print(x_train.shape, y_train.shape)
 print(x_test.shape, y_test.shape)
 # torch.Size([292, 9]) torch.Size([292, 1])
 # 2. 모델구성
-model = nn.Sequential(
-    nn.Linear(9, 32),
-    nn.ReLU(),
-    nn.Linear(32, 32),
-    nn.ReLU(),
-    nn.Linear(32, 16),
-    nn.ReLU(),
-    nn.Linear(16, 8),
-    nn.Linear(8, 8),
-    nn.ReLU(),
-    nn.Linear(8, 8),
-    nn.ReLU(),
-    nn.Linear(8, 1)
-).to(DEVICE)
-
+# model = nn.Sequential(
+#     nn.Linear(9, 32),
+#     nn.ReLU(),
+#     nn.Linear(32, 32),
+#     nn.ReLU(),
+#     nn.Linear(32, 16),
+#     nn.ReLU(),
+#     nn.Linear(16, 8),
+#     nn.Linear(8, 8),
+#     nn.ReLU(),
+#     nn.Linear(8, 8),
+#     nn.ReLU(),
+#     nn.Linear(8, 1)
+# ).to(DEVICE)
+class Model(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super(Model, self).__init__()
+        self.linear1 = nn.Linear(input_dim,5)
+        self.linear2 = nn.Linear(5,4)
+        self.linear3 = nn.Linear(4,3)
+        self.linear4 = nn.Linear(3,2)
+        self.linear5 = nn.Linear(2,output_dim)
+        
+    def forward(self, input_size):
+        x = self.linear1(input_size)
+        x = self.linear2(x)
+        x = self.linear3(x)
+        x = self.linear4(x)
+        x = self.linear5(x)
+        return x
+model = Model(9,1).to(DEVICE)
 # 3. 컴파일, 훈련
 criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=0.08)
@@ -86,6 +102,7 @@ def evaluate(model, criterion, x_test, y_test):
     with torch.no_grad():
         y_predict = model(x_test)
         loss = criterion(y_predict,y_test)
+
     return loss.item(), y_predict
 
 # 모델 평가
