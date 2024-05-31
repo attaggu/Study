@@ -33,6 +33,7 @@ x_train = torch.FloatTensor(x_train).to(DEVICE)
 x_test = torch.FloatTensor(x_test).to(DEVICE)
 y_train = torch.LongTensor(y_train).to(DEVICE)
 y_test = torch.LongTensor(y_test).to(DEVICE)
+# Long은 정수형이고 Float는 실수형임 
 
 print(x_train.shape,x_test.shape)
 print(y_train.shape,y_test.shape)
@@ -65,7 +66,7 @@ model = nn.Sequential(
 #3. 컴파일, 훈련
 # model.compile(loss = 'mse', optimizer = 'adam')
 criterion = nn.CrossEntropyLoss()                #criterion : 표준
-
+# CrossEntropyLoss - sparse처럼 onehot이 자동으로 된다 ( LongTensor로 정수형으로 바꿔줘야함 )
 optimizer = optim.Adam(model.parameters(), lr = 0.001)
 # optimizer = optim.SGD(model.parameters(), lr = 0.01)
 
